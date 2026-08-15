@@ -1107,47 +1107,24 @@ Extract services only when justified
 Any backend module or the entire application should be capable of
 evolving into a service for the future DEVS REC platform.
 
-------------------------------------------------------------------------
+---
 
 ## Work Assigned
 
-  ------------------------------------------------------------------------
-  Workstream        Assigned To       Primary            Status
-                                      Responsibilities   
-  ----------------- ----------------- ------------------ -----------------
-  Frontend          Sabhari Sainath   Event Registration 
-                                      module             
+| Workstream | Assigned To | Primary Responsibilities | Status |
+|---|---|---|---|
+| Frontend | Sabhari Sainath | Event Registration module | |
+| Frontend | Asvand | Attendance module and Admin dashboard | |
+| Backend | Sai Kishore, Kamlesh | Auth, RBAC, registration endpoints, ticket generation, QR logic, OD PDF | |
+| Backend | Sarvin, Kamlesh | Role-based routing, attendance scanning, visualizations, metrics, admin actions | |
+| DevOps / Security | Chandhru, Iniyan | Docker, VPS, reverse proxy, TLS, firewall, DNS, secrets, backups | |
+| QA / Testing | Iniyan, Chandhru | Security, concurrency, device/network rehearsal, regression | |
 
-  Frontend          Asvand            Attendance module  
-                                      and Admin          
-                                      dashboard          
+### Ownership Rule
 
-  Backend           Sai Kishore,      Auth, RBAC,        
-                    Kamlesh           registration       
-                                      endpoints, ticket  
-                                      generation, QR     
-                                      logic, OD PDF      
+Each feature should have one accountable owner. Other contributors should review the code and test the acceptance criteria.
 
-  Backend           Sarvin, Kamlesh   Role-based         
-                                      routing,           
-                                      attendance         
-                                      scanning,          
-                                      visualizations,    
-                                      metrics, admin     
-                                      actions            
-
-  DevOps / Security Chandhru, Iniyan  Docker, VPS,       
-                                      reverse proxy,     
-                                      TLS, firewall,     
-                                      DNS, secrets,      
-                                      backups            
-
-  QA / Testing      Iniyan, Chandhru  Security,          
-                                      concurrency,       
-                                      device/network     
-                                      rehearsal,         
-                                      regression         
-------------------------------------------------------------------------
+Avoid ownership by **“everyone”**; it becomes unclear during a 10-day sprint.
 
 ---
 
@@ -1200,15 +1177,6 @@ The following resources are recommended references for implementation, security,
 
 ------------------------------------------------------------------------
 
-### Ownership rule
-
-Each feature should have one accountable owner. Other contributors
-review code and test acceptance criteria.
-
-Avoid ownership by "everyone"; it becomes unclear during a 10-day
-sprint.
-
-------------------------------------------------------------------------
 
 ## Final Engineering Rule
 
