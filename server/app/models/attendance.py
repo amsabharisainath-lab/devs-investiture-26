@@ -1,11 +1,15 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional,TYPE_CHECKING
 from sqlalchemy import BigInteger, ForeignKey, Enum, DateTime, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-# Assuming your declarative base is imported from core
-from app.core.database import Base
-from app.enums.attendance_status import AttendanceStatus, AttendanceDecision
+if TYPE_CHECKING:
+    from app.models.registration import Registration
+    from app.models.user import User
+    from app.models.station import Station
+
+from app.db.session import Base
+from app.enum.attendance_status import AttendanceStatus,AttendanceDecision
 
 class Attendance(Base):
     __tablename__ = "attendance"
