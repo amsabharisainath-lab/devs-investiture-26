@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.rate_limiter import limiter
+from app.db.session import init_db
 
 
 @asynccontextmanager
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
     print(f"Environment: {settings.ENVIRONMENT}")
     print(f"Debug mode: {settings.DEBUG}")
     print(f"Docs available at: http://{settings.HOST}:{settings.PORT}/api/docs")
+    init_db()
     yield
     print(f"Shutting down {settings.APP_NAME}")
 
