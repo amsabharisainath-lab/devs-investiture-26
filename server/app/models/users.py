@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from sqlalchemy import BigInteger, String, SmallInteger, Boolean, DateTime, Enum, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.session import Base
 from app.enum.user_role import UserRole
@@ -29,8 +29,4 @@ class User(Base):
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
-    )
-
-    sessions: Mapped[List["Session"]] = relationship(
-        "Session", back_populates="user", cascade="all, delete-orphan"
     )

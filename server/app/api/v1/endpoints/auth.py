@@ -1,6 +1,6 @@
 from authlib.integrations.starlette_client import OAuth
 from authlib.integrations.base_client.errors import OAuthError
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session as DBSession
 
@@ -8,12 +8,11 @@ from app.core.config import settings
 from app.db.session import get_db
 from app.dependancies.auth import get_current_user_optional
 from app.models.users import User
-from app.schemas.auth import MeResponse, SessionUser
+from app.schemas.auth import MeResponse, SessionUser, TokenResponse
 from app.services.auth import (
     verify_institutional_email,
     get_or_create_user,
-    create_session,
-    revoke_session,
+    create_access_token,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -51,34 +50,12 @@ async def google_callback(request: Request, db: DBSession = Depends(get_db)):
     verify_institutional_email(email, email_verified)
 
     user = get_or_create_user(db, google_sub=google_sub, email=email, name=name)
-    session = create_session(
-        db,
-        user=user,
-        user_agent=request.headers.get("user-agent"),
-        ip_address=request.client.host if request.client else None,
+    access_token = create_access_token(user=user)
+
+    return TokenResponse(
+        access_token=access_token,
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
-
-    response = RedirectResponse(url=f"{settings.FRONTEND_URL}/registration")
-    response.set_cookie(
-        key=settings.SESSION_COOKIE_NAME,
-        value=session.id,
-        httponly=True,
-        secure=not settings.DEBUG,
-        samesite="lax",
-        max_age=settings.SESSION_EXPIRE_MINUTES * 60,
-        path="/",
-    )
-    return response
-
-
-@router.post("/logout")
-def logout(request: Request, db: DBSession = Depends(get_db)):
-    session_id = request.cookies.get(settings.SESSION_COOKIE_NAME)
-    if session_id:
-        revoke_session(db, session_id=session_id)
-    response = RedirectResponse(url=f"{settings.FRONTEND_URL}/")
-    response.delete_cookie(settings.SESSION_COOKIE_NAME, path="/")
-    return response
 
 
 @router.get("/me", response_model=MeResponse)
