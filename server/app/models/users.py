@@ -1,28 +1,36 @@
 from datetime import datetime
+from typing import List, Optional
 
-from sqlalchemy import Boolean, DateTime, String, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import BigInteger, String, SmallInteger, Boolean, DateTime, Enum, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
+from app.enum.user_role import UserRole
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    name: Mapped[str] = mapped_column(String(255))
-    avatar_url: Mapped[str | None] = mapped_column(String(500), default=None)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+
+    google_sub: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    roll_no: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    department: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    year: Mapped[Optional[int]] = mapped_column(SmallInteger, nullable=True)
+
+    role: Mapped[UserRole] = mapped_column(Enum(UserRole), nullable=False, default=UserRole.STUDENT)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true", nullable=False)
+
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
-    def __repr__(self) -> str:
-        return f"<User id={self.id} email={self.email!r}>"
+    sessions: Mapped[List["Session"]] = relationship(
+        "Session", back_populates="user", cascade="all, delete-orphan"
+    )

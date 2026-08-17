@@ -12,21 +12,37 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
     ENVIRONMENT: str = "development"
+
     # ALLOWED EMAIL DOMAINS
     ALLOWED_EMAIL_DOMAINS: List[str] = ["rajalakshmi.edu.in"]
+
     # Server Configuration
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     ALLOWED_HOSTS: List[str] = ["*"]
     FRONTEND_URL: str = "http://localhost:3000"
+
     # supabase config
     SUPABASE_URL: str = ""
     SUPABASE_KEY: str = ""
     SUPABASE_STORAGE_BUCKET: str = "posters"
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
+
+    # google oauth config
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_REDIRECT_URI: str
+    
+    # sessions config
+    SESSION_COOKIE_NAME: str = "devs_session"
+    SESSION_EXPIRE_MINUTES: int = 720
+    FRONTEND_URL: str = "http://localhost:5173"
+
+
     # OAuth Configuration
     OAUTH_REDIRECT_URL: str = "http://localhost:8000/api/v1/auth/oauth/callback"
     OAUTH_ENABLED_PROVIDERS: List[str] = ["google"]
+    
     # Database Configuration
     DATABASE_URI: str = ""
     DB_ECHO: bool = False
