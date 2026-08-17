@@ -1,11 +1,12 @@
-from datetime import datetime, timezone
+from datetime import timedelta, timezone, datetime
+import jwt
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session as DBSession
 
 from app.core.config import settings
 from app.models.users import User
-from app.models.session import Session as UserSession
 
 
 class DomainNotAllowedError(HTTPException):
@@ -29,9 +30,7 @@ def verify_institutional_email(email: str, email_verified: bool) -> None:
 
     if domain not in allowed_domains:
         raise DomainNotAllowedError()
-    # domain = email.split("@")[-1].lower()
-    # if domain != settings.ALLOWED_EMAIL_DOMAINS.lower():
-    #     raise DomainNotAllowedError()
+
 
 
 def get_or_create_user(db: DBSession, *, google_sub: str, email: str, name: str) -> User:
@@ -55,23 +54,30 @@ def get_or_create_user(db: DBSession, *, google_sub: str, email: str, name: str)
     return user
 
 
-def create_session(
-    db: DBSession, *, user: User, user_agent: str | None, ip_address: str | None
-) -> UserSession:
-    session = UserSession(
-        user_id=user.id,
-        expires_at=UserSession.new_expiry(settings.SESSION_EXPIRE_MINUTES),
-        user_agent=user_agent,
-        ip_address=ip_address,
-    )
-    db.add(session)
-    db.commit()
-    db.refresh(session)
-    return session
+def create_access_token(*, user: User) -> str:
+    now = datetime.now(timezone.utc)
+
+    payload = {
+        "sub": str(user.id),
+        "type": "access",
+        "iat": now,
+        "exp": now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    }
+
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
-def revoke_session(db: DBSession, *, session_id: str) -> None:
-    session = db.query(UserSession).filter(UserSession.id == session_id).one_or_none()
-    if session and session.revoked_at is None:
-        session.revoked_at = datetime.now(timezone.utc)
-        db.commit()
+def decode_access_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+        )
+    except (ExpiredSignatureError, InvalidTokenError):
+        raise ValueError("Invalid or expired token")
+
+    if payload.get("type") != "access" or not payload.get("sub"):
+        raise ValueError("Invalid token")
+
+    return payload
