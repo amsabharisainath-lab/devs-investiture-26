@@ -1,3 +1,5 @@
+from starlette.middleware.sessions import SessionMiddleware
+
 from contextlib import asynccontextmanager
 from typing import Callable, cast
 
@@ -33,6 +35,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SECRET_KEY,
+)
 
 app.add_middleware(
     CORSMiddleware,

@@ -19,4 +19,7 @@ dependencies = [
   "sqlalchemy>=2.0.52",
   "alembic>=1.19.1",
   "psycopg[binary]>=3.3.4",
+  "slowapi>=0.1.10",
+  "authlib>=1.7.2",
+  "itsdangerous>=2.2.0",
 ]
