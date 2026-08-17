@@ -1,10 +1,17 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional,TYPE_CHECKING
 from sqlalchemy import BigInteger, String, SmallInteger, Boolean, DateTime, Enum, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+if TYPE_CHECKING:
+    from app.models.registration import Registration
+    from app.models.audit_event import AuditEvent
+    from app.models.scan_event import ScanEvent
+    from app.models.attendance import Attendance
+    from app.models.station import Station
 
 # Assuming you have a declarative base set up in your core/database.py
-from app.core.database import Base 
+from app.db.session import Base 
+from app.enum.user_role import UserRole
 
 class User(Base):
     __tablename__ = "users"

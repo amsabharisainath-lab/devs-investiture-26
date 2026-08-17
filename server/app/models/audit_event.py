@@ -1,12 +1,14 @@
 from datetime import datetime
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict,TYPE_CHECKING
 from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
-# Assuming your declarative base is imported from core
-from app.core.database import Base
-from app.enums.audit_event_type import AuditEventType
+if TYPE_CHECKING:
+    from app.models.user import User
+
+from app.db.session import Base
+from app.enum.audit_event_type import AuditEventType
 
 class AuditEvent(Base):
     __tablename__ = "audit_events"

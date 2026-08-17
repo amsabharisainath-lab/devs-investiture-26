@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import List
+from typing import List,TYPE_CHECKING
 from sqlalchemy import BigInteger, String, DateTime, Enum, func, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+if TYPE_CHECKING:
+    from app.models.registration import Registration
 
-# Assuming your declarative base is imported from core
-from app.core.database import Base
-from app.enums.event_status import EventStatus
+from app.db.session import Base
+from app.enum.event_status import EventStatus
 
 class Event(Base):
     __tablename__ = "events"

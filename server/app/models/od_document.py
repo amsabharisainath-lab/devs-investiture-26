@@ -1,10 +1,12 @@
 from datetime import datetime
 from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.models.registration import Registration
 
-# Assuming your declarative base is imported from core
-from app.core.database import Base
-from app.enums.od_status import ODStatus
+from app.db.session import Base
+from app.enum.od_status import ODStatus
 
 class ODDocument(Base):
     __tablename__ = "od_documents"
