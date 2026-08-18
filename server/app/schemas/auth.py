@@ -18,3 +18,8 @@ class SessionUser(BaseModel):
 class MeResponse(BaseModel):
     authenticated : bool
     user : SessionUser | None = None
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
