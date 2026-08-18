@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     OAUTH_ENABLED_PROVIDERS: List[str] = ["google"]
     
     # Database Configuration
-    DATABASE_URI: str = ""
+    DATABASE_URI: str = "postgresql://postgres:Sqldb%402026@localhost:5432/dev_db"
     DB_ECHO: bool = False
 
     # Redis Configuration
