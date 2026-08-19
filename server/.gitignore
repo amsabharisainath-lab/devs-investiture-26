@@ -156,3 +156,6 @@ alembic/versions/*.pyc
 tmp/
 temp/
 *.tmp
+
+
+server/alembic/versions/*

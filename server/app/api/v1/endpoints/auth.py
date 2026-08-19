@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session as DBSession
 from app.core.config import settings
 from app.db.session import get_db
 from app.dependancies.auth import get_current_user_optional
-from app.models.users import User
+from app.models.user import User
 from app.schemas.auth import MeResponse, SessionUser, TokenResponse
 from app.services.auth import (
     verify_institutional_email,

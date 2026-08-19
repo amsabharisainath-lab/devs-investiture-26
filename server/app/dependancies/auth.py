@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session as DBSession
 
 from app.db.session import get_db
 from app.enum.user_role import UserRole
-from app.models.users import User
+from app.models.user import User
 from app.services.auth import decode_access_token
 
 bearer_scheme = HTTPBearer(auto_error=False)
