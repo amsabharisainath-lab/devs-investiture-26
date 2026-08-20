@@ -28,10 +28,10 @@ class ScanEvent(Base):
     )
     
     # Foreign Keys - Operational (Not Null)
-    actor_id: Mapped[int] = mapped_column(
+    actor_id: Mapped[Optional[int]] = mapped_column(
         BigInteger, ForeignKey("users.id", ondelete="RESTRICT"), nullable=True, index=True
     )
-    station_id: Mapped[int] = mapped_column(
+    station_id: Mapped[Optional[int]] = mapped_column(
         BigInteger, ForeignKey("stations.id", ondelete="RESTRICT"), nullable=True, index=True
     )
     

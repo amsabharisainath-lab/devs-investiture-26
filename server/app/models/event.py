@@ -18,9 +18,10 @@ class Event(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     
     # Scheduling Timestamps
-    start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    end_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    entry_open_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     exit_open_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    entry_close_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    exit_close_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     
     # Status
     status: Mapped[EventStatus] = mapped_column(
@@ -42,14 +43,18 @@ class Event(Base):
     # Table Constraints
     # ---------------------------------------------------------
     __table_args__ = (
-        CheckConstraint(
-            "start_at < end_at",
-            name="check_start_before_end"
-        ),
-        CheckConstraint(
-            "start_at <= exit_open_at AND exit_open_at <= end_at",
-            name="check_exit_open_within_event"
-        ),
+    CheckConstraint(
+        "entry_open_at < entry_close_at",
+        name="check_entry_open_before_close"
+    ),
+    CheckConstraint(
+        "exit_open_at < exit_close_at",
+        name="check_exit_open_before_close"
+    ),
+    CheckConstraint(
+        "entry_close_at <= exit_open_at",
+        name="check_entry_before_exit"
+    ),
     )
 
     # ---------------------------------------------------------
