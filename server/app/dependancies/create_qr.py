@@ -58,33 +58,40 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
     if expires_at <= now:
         return {"error": "QR generation window has already closed."}, 403
 
-    # 4. Atomic Invalidation and Creation
+    # 4. UPSERT Logic (One QR Token per action per registration)
     try:
-        # Invalidate existing active tokens for this specific action
-        existing_tokens = db_session.query(QRToken).filter(
+        # Check for an existing token credential
+        existing_token = db_session.query(QRToken).filter(
             QRToken.registration_id == registration_id,
-            QRToken.action == action,
-            QRToken.consumed_at.is_(None),
-            QRToken.expires_at > now
-        ).all()
+            QRToken.action == action
+        ).first()
 
-        for token in existing_tokens:
-            token.expires_at = now
+        # Defense-in-depth: Never overwrite a token that has historical scan significance
+        if existing_token and existing_token.consumed_at is not None:
+            return {"error": "QR code has already been consumed and cannot be regenerated."}, 403
 
-        # Generate and hash new token
+        # Generate and hash new token credential
         raw_token = secrets.token_urlsafe(32)
         token_hash = hashlib.sha256(raw_token.encode('utf-8')).hexdigest()
 
-        new_qr_token = QRToken(
-            registration_id=registration_id,
-            action=action,
-            token_hash=token_hash,
-            issued_at=now,
-            expires_at=expires_at, 
-            consumed_at=None
-        )
+        if existing_token:
+            # UPDATE (Intentional regeneration / recovery)
+            existing_token.token_hash = token_hash
+            existing_token.issued_at = now
+            existing_token.expires_at = expires_at
+            existing_token.consumed_at = None
+        else:
+            # INSERT (First time generation)
+            new_qr_token = QRToken(
+                registration_id=registration_id,
+                action=action,
+                token_hash=token_hash,
+                issued_at=now,
+                expires_at=expires_at, 
+                consumed_at=None
+            )
+            db_session.add(new_qr_token)
         
-        db_session.add(new_qr_token)
         db_session.commit()
 
         return {
@@ -94,5 +101,5 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
 
     except Exception as e:
         db_session.rollback()
-        logging.error(f"Error generating QR: {str(e)}")
+        logging.error(f"Error generating/updating QR: {str(e)}")
         return {"error": "Internal server error during QR generation."}, 500
