@@ -6,7 +6,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session as DBSession
 
 from app.core.config import settings
-from app.models.users import User
+from app.models.user import User
 
 
 class DomainNotAllowedError(HTTPException):
