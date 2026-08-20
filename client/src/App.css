@@ -1,184 +1,1285 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* =========================================================
+   DEVS — INVESTITURE-26
+   GLOBAL
+   ========================================================= */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+* {
+  box-sizing: border-box;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-#center {
+body {
+  background: #000;
+  color: #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   HOME PAGE
+   ========================================================= */
+
+.home-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  background: #000;
+  color: #fff;
+
+  padding: 18px;
+
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
 
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 28px;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
+/* =========================================================
+   HEADER
+   ========================================================= */
 
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
+.home-header {
   position: relative;
+
   width: 100%;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+  min-height: 180px;
+
+  border: 2px solid #fff;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 20px;
+}
+
+
+/* =========================================================
+   HAMBURGER
+   ========================================================= */
+
+/* =========================================================
+   SIDEBAR / MENU BUTTON
+   ========================================================= */
+
+.menu-button {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 8px;
+
+  background: transparent;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+}
+
+
+/* Three lines */
+
+.menu-button span {
+  display: block;
+
+  width: 100%;
+  height: 2px;
+
+  background: #fff;
+
+  border-radius: 1px;
+}
+/* =========================================================
+   DEVS LOGO
+   ========================================================= */
+
+.home-brand {
+  margin-top: 0;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 42px;
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   INVESTITURE-26
+   HOLLOW / OUTLINE FONT
+   ========================================================= */
+
+.event-title {
+  margin: 34px 0 0;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size:
+    clamp(34px, 6vw, 64px);
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+
+  text-align: center;
+
+  /* Hollow text */
+  color: #000;
+
+  -webkit-text-stroke: 2px #fff;
+}
+
+
+/* =========================================================
+   SIGN IN SECTION
+   ========================================================= */
+
+.signin-section {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   SIGN IN BUTTON
+   ========================================================= */
+
+.signin-button {
+  min-width: 190px;
+
+  padding: 17px 35px;
+
+  background: #000;
+
+  color: #fff;
+
+  border: 2px solid #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 23px;
+
+  font-weight: 900;
+
+  letter-spacing: 0;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.signin-button:hover {
+  background: #fff;
+
+  color: #000;
+}
+
+
+/* =========================================================
+   MAIN EVENT CARD
+   ========================================================= */
+
+/* =========================================================
+   GUEST INFORMATION CONTAINER
+   ========================================================= */
+
+.event-card {
+  width: 100%;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 42px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   EACH GUEST ROW
+   ========================================================= */
+
+.guest-info-card {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: 180px 1fr;
+
+  gap: 40px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   PASSPORT-STYLE PHOTO
+   ========================================================= */
+
+.guest-photo {
+  width: 160px;
+
+  height: 205px;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  color: #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 22px;
+
+  font-weight: 900;
+
+  line-height: 1.15;
+}
+
+
+/* =========================================================
+   GUEST CONTENT
+   ========================================================= */
+
+.guest-content {
+  min-width: 0;
+
+  padding-top: 2px;
+}
+
+
+/* =========================================================
+   GUEST HEADING
+   ========================================================= */
+
+.guest-content h2 {
+  display: inline-block;
+
+  margin: 0 0 20px;
+
+  padding-bottom: 7px;
+
+  border-bottom: 3px solid #fff;
+
+  color: #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 30px;
+
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   GUEST PARAGRAPH
+   ========================================================= */
+
+.guest-description {
+  margin: 0;
+
+  max-width: 750px;
+
+  color: rgba(255, 255, 255, 0.85);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 400;
+
+  line-height: 1.65;
+}
+/* =========================================================
+   SOCIAL SECTION
+   ========================================================= */
+
+.social-card {
+  width: 100%;
+
+  min-height: 95px;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 80px;
+}
+
+
+/* =========================================================
+   SOCIAL ICON BUTTON
+   ========================================================= */
+
+.social-icon {
+  width: 48px;
+  height: 48px;
+
+  padding: 8px;
+
+  border: 2px solid #fff;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+
+  flex-shrink: 0;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+/* Prevent SVG icons from becoming huge */
+
+.social-icon svg {
+  width: 28px;
+  height: 28px;
+
+  display: block;
+
+  flex-shrink: 0;
+}
+
+
+.social-icon:hover {
+  background: #fff;
+
+  color: #000;
+}
+
+
+/* =========================================================
+   REGISTER PAGE
+   ========================================================= */
+
+.register-page {
+  width: 100%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  background: #000;
+
+  color: #fff;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 20px;
+}
+
+
+.register-container {
+  width: min(550px, 92vw);
+}
+
+
+/* =========================================================
+   REGISTER HEADING
+   ========================================================= */
+
+.register-heading {
+  text-align: center;
+
+  margin-bottom: 45px;
+}
+
+
+.register-heading .brand {
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 42px;
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+
+  margin-bottom: 25px;
+}
+
+
+.register-heading h1 {
+  margin: 0;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size:
+    clamp(30px, 6vw, 58px);
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   REGISTER FORM
+   ========================================================= */
+
+.register-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+
+.register-form label {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 18px;
+
+  font-weight: 900;
+}
+
+
+.register-form input {
+  width: 100%;
+
+  height: 55px;
+
+  padding: 0 15px;
+
+  background: #000;
+
+  color: #fff;
+
+  border: 2px solid #fff;
+
+  outline: none;
+
+  font-size: 18px;
+}
+
+
+.register-form input:focus {
+  background: #111;
+
+  box-shadow:
+    0 0 0 1px #fff;
+}
+
+
+/* =========================================================
+   REGISTER BUTTON
+   ========================================================= */
+
+.register-button {
+  align-self: center;
+
+  margin-top: 15px;
+
+  min-width: 180px;
+
+  padding: 17px 30px;
+
+  background: #fff;
+
+  color: #000;
+
+  border: 2px solid #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 21px;
+
+  font-weight: 900;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.register-button:hover {
+  background: #000;
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   EVENT PAGE
+   ========================================================= */
+
+.event-page {
+  width: 100%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  background: #000;
+
+  color: #fff;
+
+  padding: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 28px;
+}
+
+
+/* =========================================================
+   EVENT HEADER
+   ========================================================= */
+
+.event-header {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 145px;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.event-brand {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 12px;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+}
+
+
+.event-brand span {
+  font-size: 36px;
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+}
+
+
+.event-brand strong {
+  font-size:
+    clamp(28px, 5vw, 52px);
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+}
+
+
+/* =========================================================
+   EVENT MAIN CARD
+   ========================================================= */
+
+.event-main-card {
+  min-height: 450px;
+}
+
+
+.event-poster {
+  min-height: 350px;
+
+  border: 2px solid #fff;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 28px;
+
+  font-weight: 900;
+}
+/* =========================================================
+   VENUE + TIMING TILE
+   ========================================================= */
+
+.venue-timing-card {
+  width: 100%;
+
+  border: 2px solid #fff;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 40px;
+
+  padding: 28px 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   VENUE / TIMING ITEM
+   ========================================================= */
+
+.venue-timing-item {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.venue-timing-item h2 {
+  display: inline-block;
+
+  margin: 0 0 15px;
+
+  padding-bottom: 6px;
+
+  border-bottom: 3px solid #fff;
+
+  color: #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 28px;
+
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.venue-timing-item p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.85);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  @media (max-width: 700px) {
+
+  .event-card {
+    gap: 32px;
+
+    padding: 20px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+
+  .guest-info-card {
+    grid-template-columns: 105px 1fr;
+
+    gap: 18px;
+
+    align-items: start;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+
+  .guest-photo {
+    width: 100px;
+
+    height: 135px;
+
+    font-size: 15px;
+
+    border-width: 2px;
   }
+
+
+  .guest-content {
+    min-width: 0;
+  }
+
+
+  .guest-content h2 {
+    margin-bottom: 13px;
+
+    padding-bottom: 5px;
+
+    border-bottom-width: 2px;
+
+    font-size: 21px;
+
+    line-height: 1.05;
+  }
+
+
+  .guest-description {
+    font-size: 12px;
+
+    line-height: 1.5;
+  }
+
+}
+
+  .social-card {
+    min-height: 94px;
+
+    gap: 75px;
+  }
+
+
+  .social-icon {
+    width: 46px;
+    height: 46px;
+
+    padding: 8px;
+  }
+
+
+  .social-icon svg {
+    width: 27px;
+    height: 27px;
+  }
+}
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  @media (max-width: 400px) {
+
+  .event-card {
+    padding: 15px;
+
+    gap: 28px;
+  }
+
+
+  .guest-info-card {
+    grid-template-columns: 90px 1fr;
+
+    gap: 14px;
+  }
+
+
+  .guest-photo {
+    width: 85px;
+
+    height: 115px;
+
+    font-size: 13px;
+  }
+
+
+  .guest-content h2 {
+    font-size: 18px;
+  }
+
+
+  .guest-description {
+    font-size: 11px;
+
+    line-height: 1.45;
+  }
+
+}
+  .social-card {
+    gap: 60px;
+  }
+}
+
+/* =========================================================
+   DEVS HEADER LOGO
+   ========================================================= */
+
+.home-brand img,
+.event-brand img {
+  display: block;
+
+  width: 92px;
+  height: auto;
+
+  object-fit: contain;
+
+  filter: none;
+}
+
+
+/* HOME HEADER */
+
+.home-brand {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* EVENT HEADER */
+
+.event-brand {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+/* INVESTITURE TITLE UNDER LOGO */
+
+.event-brand strong {
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 28px;
+
+  font-weight: 900;
+
+  color: #fff;
+
+  letter-spacing: -1px;
+}
+/* =========================================================
+   SIDEBAR OVERLAY
+   ========================================================= */
+
+.sidebar-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  z-index: 9998;
+
+  animation:
+    sidebar-overlay-in
+    0.2s
+    ease
+    forwards;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: min(320px, 82vw);
+
+  min-height: 390px;
+
+  background: #000;
+
+  border: 2px solid #fff;
+
+  z-index: 9999;
+
+  padding-top: 95px;
+
+  box-sizing: border-box;
+
+  animation:
+    sidebar-slide-in
+    0.3s
+    cubic-bezier(0.77, 0, 0.175, 1)
+    forwards;
+}
+
+
+/* =========================================================
+   SIDEBAR BUTTONS
+   ========================================================= */
+
+.sidebar-button {
+  display: flex;
+
+  width: 100%;
+  height: 70px;
+
+  padding: 0;
+
+  margin: 0;
+
+  box-sizing: border-box;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #000;
+  color: #fff;
+
+  border: none;
+  border-top: 2px solid #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 23px;
+  font-weight: 900;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+/* Remove the special spacing from Log Out */
+
+.sidebar-logout {
+  margin-top: 0;
+  border-bottom: 2px solid #fff;
+}
+
+
+/* Hover */
+
+.sidebar-button:hover {
+  background: #fff;
+  color: #000;
+}
+
+@keyframes sidebar-slide-in {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+
+}
+
+
+@keyframes sidebar-overlay-in {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+/* =========================================================
+   GO BACK BUTTON
+   ========================================================= */
+
+.go-back-button {
+  margin-top: 30px;
+
+  padding: 12px 28px;
+
+  background: #000;
+
+  color: #fff;
+
+  border: 2px solid #fff;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Impact,
+    sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.go-back-button:hover {
+  background: #fff;
+  color: #000;
+}
+
+
+@media (max-width: 700px) {
+
+  .home-brand img {
+    width: 82px;
+  }
+
+  .event-brand img {
+    width: 82px;
+  }
+
+  .event-brand {
+    gap: 7px;
+  }
+
+  .event-brand strong {
+    font-size: 22px;
+  }
+
+}
+@media (max-width: 700px) {
+
+  .menu-button {
+    top: 12px;
+    left: 12px;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 7px;
+
+    border-width: 2px;
+
+    gap: 4px;
+  }
+
+  .menu-button span {
+    height: 2px;
+  }
+
+}
+.guest-photo {
+  object-fit: cover;
+  object-position: center;
+}
+@media (max-width: 700px) {
+
+  .venue-timing-card {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+
+    padding: 20px;
+  }
+
+  .venue-timing-item h2 {
+    font-size: 20px;
+
+    margin-bottom: 10px;
+
+    padding-bottom: 5px;
+
+    border-bottom-width: 2px;
+  }
+
+  .venue-timing-item p {
+    font-size: 12px;
+
+    line-height: 1.5;
+  }
+
+}
+@media (max-width: 700px) {
+
+  .sidebar-button {
+    width: 100%;
+    height: 65px;
+
+    padding: 0;
+    margin: 0;
+
+    font-size: 20px;
+  }
+
+  .sidebar-logout {
+    margin-top: 0;
+  }
+
+}
+@media (max-width: 700px) {
+
+  .go-back-button {
+    padding: 10px 22px;
+
+    font-size: 17px;
+
+    margin-top: 25px;
+  }
+
 }
