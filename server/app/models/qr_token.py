@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional,TYPE_CHECKING,List
-from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func, CheckConstraint
+from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func, CheckConstraint,UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.registration import Registration
@@ -44,11 +44,16 @@ class QRToken(Base):
     # Table Constraints
     # ---------------------------------------------------------
     __table_args__ = (
-        CheckConstraint(
-            "expires_at > issued_at", 
-            name="check_expires_after_issued"
-        ),
-    )
+    UniqueConstraint(
+        "registration_id",
+        "action",
+        name="uq_registration_qr_action"
+    ),
+    CheckConstraint(
+        "expires_at > issued_at",
+        name="check_expires_after_issued"
+    ),
+)
 
     # ---------------------------------------------------------
     # Relationships
