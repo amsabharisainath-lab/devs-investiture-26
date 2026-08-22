@@ -100,10 +100,10 @@ class User(Base):
     )
 
     # Audit logs triggered by this user
-    audit_events: Mapped[List["AuditEvent"]] = relationship(
-        "AuditEvent",
-        back_populates="actor"
-    )
+    # audit_events: Mapped[List["AuditEvent"]] = relationship(
+    #     "AuditEvent",
+    #     back_populates="actor"
+    # )
 
     # Scans performed by this user
     scan_events: Mapped[List["ScanEvent"]] = relationship(
