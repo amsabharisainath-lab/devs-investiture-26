@@ -26,10 +26,11 @@ class User(Base):
     )
 
     # Identifiers & Contact
-    google_sub: Mapped[str] = mapped_column(
+    # Turn this to nullable and Mapped[Optional[str]]
+    google_sub: Mapped[Optional[str]] = mapped_column(
         String(255),
         unique=True,
-        nullable=False
+        nullable=True
     )
     email: Mapped[str] = mapped_column(
         String(255),
@@ -122,4 +123,12 @@ class User(Base):
     assigned_stations: Mapped[List["Station"]] = relationship(
         "Station",
         back_populates="assigned_admin"
+    )
+
+    # Add this relationship so User -> its (optional) on-spot record is reachable
+    onspot_registration: Mapped["OnSpotRegistration | None"] = relationship(
+        "OnSpotRegistration",
+        foreign_keys="OnSpotRegistration.user_id",
+        back_populates="user",
+        uselist=False,
     )

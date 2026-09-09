@@ -1,7 +1,7 @@
 import secrets
 import hashlib
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import Session
 
 # Assuming imports for your models and enums
@@ -13,6 +13,11 @@ from app.enum.attendance_status import AttendanceStatus
 
 from app.models.qr_token import QRToken
 from app.models.registration import Registration
+
+# Section 5.1: start with 5 minutes; bump to 10 only if rehearsal
+# shows the network/queue needs it.
+QR_ENTRY_TTL_MINUTES = 5
+
 
 def create_qr(registration_id: int, action_str: str, db_session: Session):
     try:
@@ -46,14 +51,16 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
     if action == QRAction.ENTRY:
         if attendance.entry_status != AttendanceStatus.PENDING:
             return {"error": "Entry already completed or not pending."}, 403
-        expires_at = event.entry_close_at
+        rolling_expiry = now + timedelta(minutes=QR_ENTRY_TTL_MINUTES)
+        expires_at = min(rolling_expiry, event.entry_close_at)
 
     elif action == QRAction.EXIT:
         if attendance.entry_status != AttendanceStatus.SCANNED:
             return {"error": "Cannot generate EXIT QR before successful entry."}, 403
         if attendance.exit_status != AttendanceStatus.PENDING:
             return {"error": "Exit already completed or not pending."}, 403
-        expires_at = event.exit_close_at
+        rolling_expiry = now + timedelta(minutes=QR_ENTRY_TTL_MINUTES)
+        expires_at = min(rolling_expiry, event.exit_close_at)
 
     if expires_at <= now:
         return {"error": "QR generation window has already closed."}, 403
@@ -69,6 +76,12 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
         # Defense-in-depth: Never overwrite a token that has historical scan significance
         if existing_token and existing_token.consumed_at is not None:
             return {"error": "QR code has already been consumed and cannot be regenerated."}, 403
+
+        # Defence layer when active token already present
+        if existing_token and existing_token.expires_at > now:
+            return {"error": "A valid QR token already exists and has not expired.",
+                    "expires_at": existing_token.expires_at.isoformat()
+                    }, 409
 
         # Generate and hash new token credential
         raw_token = secrets.token_urlsafe(32)
