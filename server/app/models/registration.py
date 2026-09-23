@@ -106,3 +106,7 @@ class Registration(Base):
         "ODDocument",
         back_populates="registration"
     )
+
+    onspot_record: Mapped["OnSpotRegistration | None"] = relationship(
+        "OnSpotRegistration", back_populates="registration", uselist=False
+    )
