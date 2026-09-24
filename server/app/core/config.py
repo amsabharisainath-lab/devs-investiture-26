@@ -41,8 +41,8 @@ class Settings(BaseSettings):
     DATABASE_URI: str = "sqlite:///./dev.db"
     DB_ECHO: bool = False
 
-    # Redis Configuration
-    REDIS_URL: str = ""
+    # Redis / Celery Configuration
+    REDIS_URL: str = "redis://localhost:6379/0"
 
     # JWT Configuration
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
@@ -82,10 +82,6 @@ class Settings(BaseSettings):
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = True
     RATE_LIMIT_PER_MINUTE: int = 60
-
-    # Celery Configuration
-    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
-    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
 
     # Pagination
     DEFAULT_PAGE_SIZE: int = 20
