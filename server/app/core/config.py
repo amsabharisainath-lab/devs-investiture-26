@@ -29,16 +29,16 @@ class Settings(BaseSettings):
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
 
     # google oauth config
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
-    GOOGLE_REDIRECT_URI: str
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/v1/auth/google/callback"
 
     # OAuth Configuration
     OAUTH_REDIRECT_URL: str = "http://localhost:8000/api/v1/auth/oauth/callback"
     OAUTH_ENABLED_PROVIDERS: List[str] = ["google"]
     
     # Database Configuration
-    DATABASE_URI: str = "postgresql://postgres:Sqldb%402026@localhost:5432/dev_db"
+    DATABASE_URI: str = "sqlite:///./dev.db"
     DB_ECHO: bool = False
 
     # Redis Configuration
