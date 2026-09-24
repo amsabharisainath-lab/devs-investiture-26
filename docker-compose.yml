@@ -18,5 +18,43 @@ services:
       retries: 5
       start_period: 10s
 
+  redis:
+    image: redis:7-alpine
+    container_name: devs_investiture_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  worker:
+    build:
+      context: ./server
+    container_name: devs_investiture_worker
+    restart: unless-stopped
+    command: celery -A app.worker.celery_app:celery_app worker -Q registration_email,od_email --loglevel=INFO
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URI: ${DATABASE_URI:-postgresql+psycopg://postgres:postgres@postgres:5432/devs_investiture}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  api:
+    build:
+      context: ./server
+    container_name: devs_investiture_api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URI: ${DATABASE_URI:-postgresql+psycopg://postgres:postgres@postgres:5432/devs_investiture}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
 volumes:
   postgres_data:
