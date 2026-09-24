@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Preloader from "./components/Preloader";
+import LoadingState from "./components/shared/LoadingState";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Event from "./pages/Event";
@@ -16,9 +17,11 @@ import AdminsPage from "./pages/admin/AdminsPage";
 import AdminProfilePage from "./pages/admin/AdminProfilePage";
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <BrowserRouter>
-      <Preloader />
+      {isLoading && <LoadingState onComplete={() => setIsLoading(false)} />}
 
       <Routes>
         {/* Student Attendee Flow */}

@@ -28,6 +28,78 @@ body,
   font-family: var(--font-sans);
 }
 
+/* Loading Overlay container */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  transform: translateY(0);
+  /* Custom cubic-bezier transition for the upward exit motion */
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Entire loading composition moves upward on completion */
+.loading-overlay.fade-out {
+  transform: translateY(-100%);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* Mobile-first centered card layout */
+.loading-container {
+  width: 100%;
+  max-width: 320px; /* Portrait mobile phones design focus */
+  height: 100svh;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Visual drawing canvas area */
+.loading-visual-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.loader-logo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.loader-subtext {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--muted-gray);
+  letter-spacing: 0.50em;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-top: 24px;
+  text-indent: 0.50em; /* offset letter-spacing */
+}
+
+.loader-signature {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted-gray);
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-top: 20px;
+}
+
 /* Reusable Brand Logo Container and baseline dot styling */
 .brand-logo-container {
   display: flex;
@@ -64,6 +136,61 @@ body,
   height: 12px;
   margin-left: 8px;
   margin-bottom: 6px;
+}
+
+/* Wave motion inside SVG clipPath */
+.wave-path {
+  animation: wave-move 3.5s linear infinite;
+}
+
+@keyframes wave-move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200px); /* loop seamless period length */
+  }
+}
+
+/* Bottom Progress Panel */
+.loading-status-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.status-label {
+  color: var(--muted-gray);
+  font-weight: 500;
+}
+
+.status-percentage {
+  color: var(--fg-white);
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 1.5px; /* Extremely minimal horizontal indicator */
+  background-color: var(--border-dark);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--fg-white);
+  transition: width 40ms linear;
 }
 
 /* Static Page Header branding at top of viewport */
@@ -208,5 +335,10 @@ body,
   .main-content,
   .bottom-nav {
     max-width: 540px;
+  }
+
+  .loading-container {
+    max-width: 400px;
+    padding: 64px 32px;
   }
 }
