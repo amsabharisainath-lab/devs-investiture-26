@@ -23,6 +23,8 @@ from app.services.registration import (
     register_for_event,
 )
 
+from app.services.registration_email import send_registration_email
+
 router = APIRouter(tags=["registration"])
 
 
@@ -73,6 +75,8 @@ def register_for_event_endpoint(
                 "Use /events/{event_id}/registration/entry-qr to retry."
             ),
         )
+    if(registration.status == "CONFIRMED"):
+        send_registration_email.delay(registration.id)
 
     return RegistrationResponse(
         id=registration.id,
