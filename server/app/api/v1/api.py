@@ -1,10 +1,5 @@
 from fastapi import APIRouter
-
-<<<<<<< HEAD
-from app.api.v1.endpoints import health, auth, registration, onspot_registration
-=======
-from app.api.v1.endpoints import health, auth, attendance
->>>>>>> 7999d6e27fc5cf30b046d15c789ca1b66da4a7f4
+from app.api.v1.endpoints import health, auth, registration, onspot_registration, attendance
 
 api_router = APIRouter()
 
