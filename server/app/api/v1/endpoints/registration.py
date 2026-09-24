@@ -77,7 +77,6 @@ def register_for_event_endpoint(
                 "Use /events/{event_id}/registration/entry-qr to retry."
             ),
         )
-
     try:
         send_registration_email.delay(registration.id)
     except Exception:

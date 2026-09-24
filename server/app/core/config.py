@@ -66,7 +66,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
-    SMTP_FROM: str = "noreply@devs.com"
+    SMTP_FROM: str = ""
 
     # AWS S3 Configuration (Optional)
     AWS_ACCESS_KEY_ID: str = ""
