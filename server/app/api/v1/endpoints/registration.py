@@ -26,7 +26,7 @@ from app.services.registration import (
 )
 from app.worker.tasks import send_registration_email
 
-from app.services.registration_email import send_registration_email
+# from app.services.registration_email import send_registration_email
 
 router = APIRouter(tags=["registration"])
 logger = logging.getLogger(__name__)

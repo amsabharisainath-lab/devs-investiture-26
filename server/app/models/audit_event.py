@@ -41,8 +41,8 @@ class AuditEvent(Base):
     # ---------------------------------------------------------
     
     # Link back to the User who performed the action (if not system-generated)
-    actor: Mapped[Optional["User"]] = relationship(
-        "User",
-        foreign_keys=[actor_id],
-        back_populates="audit_events"
-    )
+    # actor: Mapped[Optional["User"]] = relationship(
+    #     "User",
+    #     foreign_keys=[actor_id],
+    #     back_populates="audit_events"
+    # )

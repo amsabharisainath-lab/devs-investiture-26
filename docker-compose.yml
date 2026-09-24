@@ -34,6 +34,11 @@ services:
     environment:
       REDIS_URL: redis://redis:6379/0
       DATABASE_URI: ${DATABASE_URI:-postgresql+psycopg://postgres:postgres@postgres:5432/devs_investiture}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
     depends_on:
       postgres:
         condition: service_healthy

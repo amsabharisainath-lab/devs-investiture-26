@@ -1,33 +1,55 @@
+import time
 from app.dependancies.send_email import send_email
 from pathlib import Path
 
-def send_registration_email(receiver_email: str) -> bool:
+def send_registration_email(
+    receiver_email: str,
+    name: str,
+    registration_id: str,
+    department_year: str,
+    event_time: str,
+    event_venue: str,
+    website_link: str,
+    event_name: str = "Investiture Ceremony of DEVS REC"
+) -> bool:
     """
-    Prepares the template, assets, and subject for the Round 2 Shortlist email,
+    Prepares the template, assets, and subject for the Investiture Ceremony email,
     then dispatches it via the generic send_email function.
     """
-    subject: str = "DEVS REC Board Recruitment 2026 - Round 2 Shortlist"
+    subject: str = f"Your Spot is Confirmed | {event_name}"
+    
+    # Generate a unique timestamp to prevent email clients from trimming the content (the three dots)
+    unique_id = time.time()
 
-    # The template relies on cid:header_image which we map in the dictionary below
-    html_content: str = """
+    # Using an f-string to inject the dynamic variables passed from the calling function
+    html_content: str = f"""
+    <!DOCTYPE html>
     <html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
     <body style="font-family: Arial, sans-serif; color: #333333; line-height: 1.6;">
-        <img src="cid:header_image" alt="DEVS Banner" style="max-width: 100%; height: auto;">
+        <img src="cid:header_image" alt="DEVS Banner" style="max-width: 100%; height: auto; margin-bottom: 20px;">
 
-        <p><strong>Dear Applicant,</strong></p>
+        <p>Dear <strong>{name}</strong>,</p>
 
-        <p><strong>Congratulations! 🎉</strong></p>
+        <p>Your registration for <strong>{event_name}</strong> is confirmed!</p>
 
-        <p>We're delighted to inform you that <strong>you've been shortlisted</strong> for <strong>Round 2</strong> of the <strong>DEVS REC Board Recruitment 2026</strong>.</p>
+        <p>We are happy to invite you to the Investiture Ceremony of DEVS REC. Your presence makes this occasion even more special as we turn the page to a new chapter. Come witness the induction of the new team and be part of this memorable moment.</p>
 
-        <p>Your application stood out during our initial screening, and we're excited to see you take the next step in the recruitment process. This round is an opportunity for you to showcase your skills, ideas, and unique perspective.</p>
+        <p>Your registration has been recorded under <strong>{registration_id}</strong>, as a <strong>{department_year}</strong> student. The event will be held on 8th October, from <strong>{event_time}</strong>, at <strong>{event_venue}</strong>. Kindly make sure you arrive at the venue on time.</p>
 
-        <p>To ensure smooth communication throughout the Round 2 stage of the recruitment process, we have created an official WhatsApp group for all shortlisted candidates.</p>
+        <p>Please note that your entry/exit QR code can be accessed through the website <a href="{website_link}">{website_link}</a> and will be scanned at the venue.</p>
 
-        <p><strong>Please join the group using the link below:</strong><br>
-        🔗 <a href="https://chat.whatsapp.com/EslL7JlUP3kJ5K1fn8ujqk">https://chat.whatsapp.com/EslL7JlUP3kJ5K1fn8ujqk</a></p>
+        <p>See you there!</p>
 
-        <p><strong>All updates regarding your Round 2 schedule, date, time, panel allocation, domain-specific instructions, and other important announcements will be shared through this group.</strong></p>
+        <p>Warm Regards,<br>
+        <strong>DEVS REC</strong></p>
+        
+        <!-- Hidden unique identifier to prevent email clients from clipping content -->
+        <div style="display: none; opacity: 0; max-height: 0px; font-size: 0px; line-height: 0px; overflow: hidden; mso-hide: all;">
+            {unique_id}
+        </div>
     </body>
     </html>
     """
