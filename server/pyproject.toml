@@ -25,4 +25,7 @@ dependencies = [
   "itsdangerous>=2.2.0",
   "psycopg2-binary>=2.9.12",
   "celery[redis]>=5.6.3",
+  "pdfkit>=1.0.0",
+  "reportlab>=5.0.1",
+  "pypdf>=6.19.0",
 ]
