@@ -15,6 +15,8 @@ from app.services.auth import (
     create_access_token,
 )
 
+from app.db.seed import seed_test_data
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 oauth = OAuth()
@@ -26,6 +28,7 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
+seed_test_data()
 
 @router.get("/google/start")
 async def google_start(request: Request):

@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session as DBSession
@@ -19,8 +20,10 @@ from app.services.onspot_registration import (
     QRIssuanceFailedError,
     register_onspot,
 )
+from app.worker.tasks import send_registration_email
 
 router = APIRouter(tags=["admin", "registration"])
+logger = logging.getLogger(__name__)
 
 
 @router.post(
@@ -59,6 +62,14 @@ def onspot_registration_endpoint(
         raise HTTPException(
             status_code=exc.status_code,
             detail=exc.result,
+        )
+
+    try:
+        send_registration_email.delay(registration.id)
+    except Exception:
+        logger.exception(
+            "Could not enqueue registration email for on-spot registration %s",
+            registration.id,
         )
 
     return OnSpotRegistrationResponse(

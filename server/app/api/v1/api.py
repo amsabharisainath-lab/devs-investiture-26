@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import health, auth, registration, onspot_registration, attendance
+
+from app.api.v1.endpoints import attendance, auth, health, onspot_registration, registration
 
 api_router = APIRouter()
 
