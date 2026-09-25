@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 
 dependencies = [
   "aiocache>=0.12.3",
+  "celery[redis]>=5.5.0",
   "gotrue>=2.12.4",
   "fastapi[standard]",
   "jose>=1.0.0",
@@ -23,4 +24,5 @@ dependencies = [
   "authlib>=1.7.2",
   "itsdangerous>=2.2.0",
   "psycopg2-binary>=2.9.12",
+  "celery[redis]>=5.6.3",
 ]

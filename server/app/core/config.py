@@ -29,20 +29,20 @@ class Settings(BaseSettings):
     COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
 
     # google oauth config
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
-    GOOGLE_REDIRECT_URI: str
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/v1/auth/google/callback"
 
     # OAuth Configuration
     OAUTH_REDIRECT_URL: str = "http://localhost:8000/api/v1/auth/oauth/callback"
     OAUTH_ENABLED_PROVIDERS: List[str] = ["google"]
     
     # Database Configuration
-    DATABASE_URI: str = "postgresql://postgres:Sqldb%402026@localhost:5432/dev_db"
+    DATABASE_URI: str = "sqlite:///./dev.db"
     DB_ECHO: bool = False
 
-    # Redis Configuration
-    REDIS_URL: str = ""
+    # Redis / Celery Configuration
+    REDIS_URL: str = "redis://localhost:6379/0"
 
     # JWT Configuration
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
@@ -66,7 +66,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
-    SMTP_FROM: str = "noreply@devs.com"
+    SMTP_FROM: str = ""
 
     # AWS S3 Configuration (Optional)
     AWS_ACCESS_KEY_ID: str = ""
@@ -82,10 +82,6 @@ class Settings(BaseSettings):
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = True
     RATE_LIMIT_PER_MINUTE: int = 60
-
-    # Celery Configuration
-    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
-    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
 
     # Pagination
     DEFAULT_PAGE_SIZE: int = 20

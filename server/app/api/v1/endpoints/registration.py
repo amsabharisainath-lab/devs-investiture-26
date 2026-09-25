@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session as DBSession
 
@@ -22,8 +24,12 @@ from app.services.registration import (
     StudentRoleRequiredError,
     register_for_event,
 )
+from app.worker.tasks import send_registration_email
+
+# from app.services.registration_email import send_registration_email
 
 router = APIRouter(tags=["registration"])
+logger = logging.getLogger(__name__)
 
 
 @router.post(
@@ -72,6 +78,15 @@ def register_for_event_endpoint(
                 f"Registered, but QR issuance failed: {exc.detail}. "
                 "Use /events/{event_id}/registration/entry-qr to retry."
             ),
+        )
+    try:
+        send_registration_email.delay(registration.id)
+    except Exception:
+        # Registration is already committed. Email delivery is retried by
+        # Celery when the broker is available and must not fail this response.
+        logger.exception(
+            "Could not enqueue registration email for registration %s",
+            registration.id,
         )
 
     return RegistrationResponse(

@@ -532,6 +532,30 @@ A backend feature is complete when:
 
 ---
 
+## Background jobs
+
+Compose starts one Redis broker, the API, and one worker consuming both
+`registration_email` and `od_email` queues:
+
+```bash
+docker compose up -d
+docker compose logs -f worker
+```
+
+For a local worker:
+
+```bash
+uv run celery -A app.worker.celery_app:celery_app worker -Q registration_email,od_email --loglevel=INFO
+```
+
+Registration commits before calling `.delay(registration_id)`, so email
+delivery does not delay or fail a successful registration response. The task
+contains only the registration ID; the worker reloads the record from
+PostgreSQL. Successful results are ignored because no result backend is
+configured. Temporary failures retry up to three times with exponential
+backoff. After the final retry, Celery marks the task failed and logs the
+exception. The OD task is intentionally a logged placeholder.
+
 ## Reference Documentation
 
 - [FastAPI Documentation](https://fastapi.tiangolo.com/) — HTTP API framework.
