@@ -14,7 +14,11 @@ celery_app.conf.update(
         "app.worker.tasks.send_registration_email": {
             "queue": "registration_email",
         },
-        "app.worker.tasks.send_od_email": {
+        # Route both the bulk coordinator and single worker tasks to the od_email queue
+        "app.worker.tasks.send_bulk_od": {
+            "queue": "od_email",
+        },
+        "app.worker.tasks.send_single_od": {
             "queue": "od_email",
         },
     },

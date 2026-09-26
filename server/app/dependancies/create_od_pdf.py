@@ -10,6 +10,9 @@ import pdfkit
 from pypdf import PdfReader, PdfWriter
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+import shutil
+
+wkhtmltopdf_path = shutil.which("wkhtmltopdf")
 
 
 # ============================================================
@@ -392,10 +395,10 @@ html, body {{
             "print-media-type": ""          
         }
 
-        wkhtmltopdf_path = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
-
-        if not os.path.isfile(wkhtmltopdf_path):
-            raise FileNotFoundError(f"wkhtmltopdf was not found at expected path: {wkhtmltopdf_path}")
+        if not wkhtmltopdf_path:
+            raise FileNotFoundError(
+            "wkhtmltopdf is not installed or not available in PATH."
+            )
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
 
@@ -431,14 +434,14 @@ def add_roll_number_watermark(input_pdf_bytes: bytes, roll_number: str) -> bytes
         c.translate(width / 2, height / 2) 
         c.rotate(35) 
         
-        c.setFont("Helvetica-Bold", 28)
+        c.setFont("Helvetica-Bold", 34)
         c.setFillAlpha(0.08) 
         c.setFillColorRGB(0, 0, 0) 
         
         x_start, x_end = -1200, 1200
         y_start, y_end = -1200, 1200
         x_step = 200  
-        y_step = 100  
+        y_step = 50  
         
         row_count = 0
         for y in range(y_start, y_end, y_step):
