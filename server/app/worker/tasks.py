@@ -189,13 +189,13 @@ def send_single_od(registration_id: int) -> None:
         student_email = user.email
 
         # 5. Generate PDF
-        from app.dependancies.create_od_pdf import create_od_pdf
+        from app.dependancies.create_od_pdf import create_student_od_task
         
-        pdf_bytes = create_od_pdf(
-            department_name=user.department_name,
+        pdf_bytes = create_student_od_task(
+            department_name=user.department,
             student_name=user.name,
-            roll_number=user.roll_number,
-            year=user.year
+            roll_number=user.roll_no,
+            year=str(user.year),
         )
 
         # 6. Calculate SHA-256
@@ -229,7 +229,7 @@ def send_single_od(registration_id: int) -> None:
                 subject="OD Letter: Investiture Ceremony",
                 html_content=html_body,
                 pdf_bytes=pdf_bytes,
-                pdf_filename=f"OD_{user.roll_number}.pdf"
+                pdf_filename=f"OD_{user.roll_no}.pdf"
             )
         except Exception:
             logger.exception("[SINGLE OD] Email failed for registration %s", registration_id)

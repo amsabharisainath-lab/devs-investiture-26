@@ -435,13 +435,13 @@ def add_roll_number_watermark(input_pdf_bytes: bytes, roll_number: str) -> bytes
         c.rotate(35) 
         
         c.setFont("Helvetica-Bold", 34)
-        c.setFillAlpha(0.08) 
+        c.setFillAlpha(0.06) 
         c.setFillColorRGB(0, 0, 0) 
         
         x_start, x_end = -1200, 1200
         y_start, y_end = -1200, 1200
-        x_step = 200  
-        y_step = 50  
+        x_step = 250  
+        y_step = 75  
         
         row_count = 0
         for y in range(y_start, y_end, y_step):
@@ -520,7 +520,7 @@ if __name__ == "__main__":
         pdf_bytes = create_student_od_task(
             department_name="Computer Science and Engineering",
             student_name="Kamlesh",
-            roll_number="CS2026101",
+            roll_number="250701314",
             year="3"
         )
         

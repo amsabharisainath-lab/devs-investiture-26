@@ -61,5 +61,22 @@ services:
       redis:
         condition: service_started
 
+  email-pdf-test:
+    profiles: ["test"]
+    build:
+      context: ./server
+    container_name: devs_investiture_email_pdf_test
+    command: python scripts/test_email_pdf.py
+    environment:
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
+      EMAIL_TEST_TO: ${EMAIL_TEST_TO}
+      PDF_TEST_OUTPUT: /tmp/devs_od_request_final.pdf
+      # Test-only import path; production services are unchanged.
+      PYTHONPATH: /app
+
 volumes:
   postgres_data:
