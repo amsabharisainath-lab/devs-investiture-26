@@ -23,6 +23,52 @@ from app.models.od_document import ODDocument, ODStatus
 
 logger = logging.getLogger(__name__)
 
+def get_investiture_od_email_html(student_name: str) -> str:
+    """Generates a modern, professional, black-and-white HTML email."""
+    
+    # ---------------------------------------------------------
+    # HARDCODE YOUR EVENT DETAILS HERE (Replace the bracketed text)
+    # ---------------------------------------------------------
+    event_date = "26 September 2026"     # <--- Change this
+    event_venue = "Main Auditorium"      # <--- Change this
+    od_duration = "Full Day (8 AM - 4 PM)" # <--- Change this
+    # ---------------------------------------------------------
+
+    return f"""
+    <div style="max-width: 600px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1a1a1a; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+        
+        <!-- Black Header -->
+        <div style="background-color: #000000; color: #ffffff; padding: 20px 30px; text-align: left;">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px;">OD Letter: Investiture Ceremony</h2>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 30px;">
+            <p style="margin-top: 0; font-size: 16px;">Dear <strong>{student_name}</strong>,</p>
+            <p style="font-size: 16px; line-height: 1.6; color: #333333;">Greetings from DEVS!</p>
+            <p style="font-size: 16px; line-height: 1.6; color: #333333;">We are pleased to inform you that On-Duty (OD) has been provided for your participation in the DEVS Investiture Ceremony. Your presence and contribution towards the event are sincerely appreciated.</p>
+            <p style="font-size: 16px; line-height: 1.6; color: #333333;">Please find your OD Letter attached with this mail. We kindly request you to go through the details mentioned in the document and retain the letter for submission to the respective faculty/department, as required.</p>
+            
+            <!-- Event Details Box (Light Gray background, Black accent border) -->
+            <div style="margin: 30px 0; padding: 20px; background-color: #f8f9fa; border-left: 4px solid #000000;">
+                <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Event:</strong> Investiture Ceremony</p>
+                <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Date:</strong> {event_date}</p>
+                <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Venue:</strong> {event_venue}</p>
+                <p style="margin: 0; font-size: 15px;"><strong>OD Duration:</strong> {od_duration}</p>
+            </div>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #333333;">We request you to ensure that the necessary academic formalities are completed accordingly and that the OD letter is submitted within the required timeline.</p>
+            <p style="font-size: 16px; line-height: 1.6; color: #333333;">We look forward to your enthusiastic participation and hope you have a memorable and enriching experience at the Investiture Ceremony.</p>
+            
+            <!-- Footer / Signature -->
+            <div style="margin-top: 40px; border-top: 1px solid #eeeeee; padding-top: 20px;">
+                <p style="margin: 0; font-size: 16px; font-weight: bold;">Regards,</p>
+                <p style="margin: 5px 0 0 0; font-size: 16px; color: #666666;">DEVS REC</p>
+            </div>
+        </div>
+    </div>
+    """
+
 
 @celery_app.task(
     bind=True,
@@ -172,13 +218,16 @@ def send_single_od(registration_id: int) -> None:
         db.commit()
 
         # 8. Send Email
-        from app.dependancies.send_email import send_email;
+        from app.dependancies.send_email import send_email
+
+        # Generate the formatted HTML body (only passing the name)
+        html_body = get_investiture_od_email_html(student_name=user.name)
 
         try:
             send_email(
                 receiver_email=student_email,
-                subject=f"OD Document - {user.name}",
-                html_content="<p>Please find your Official Duty (OD) document attached.</p>",
+                subject="OD Letter: Investiture Ceremony",
+                html_content=html_body,
                 pdf_bytes=pdf_bytes,
                 pdf_filename=f"OD_{user.roll_number}.pdf"
             )
