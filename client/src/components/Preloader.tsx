@@ -2,134 +2,164 @@ import { useEffect, useState } from "react";
 import "./Preloader.css";
 import MatrixRain from "./MatrixRain";
 
-export default function Preloader() {
+interface PreloaderProps {
+  onComplete?: () => void;
+}
+
+export default function Preloader({
+  onComplete,
+}: PreloaderProps) {
   const [progress, setProgress] = useState(0);
-  const [exiting, setExiting] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const duration = 4500;
-    const start = performance.now();
+    const duration = 3500;
+    const startTime = performance.now();
 
-    let animationFrame: number;
+    let animationFrame = 0;
     let exitTimer: ReturnType<typeof setTimeout>;
-    let hideTimer: ReturnType<typeof setTimeout>;
+    let completeTimer: ReturnType<typeof setTimeout>;
 
-    const updateProgress = (time: number) => {
-      const elapsed = time - start;
+    const update = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
 
       const percentage = Math.min(
-        100,
-        Math.floor((elapsed / duration) * 100)
+        (elapsed / duration) * 100,
+        100
       );
 
       setProgress(percentage);
 
-      if (elapsed < duration) {
-        animationFrame = requestAnimationFrame(updateProgress);
+      if (percentage < 100) {
+        animationFrame =
+          requestAnimationFrame(update);
       } else {
-        setProgress(100);
+        completeTimer = setTimeout(() => {
+          setIsExiting(true);
 
-        exitTimer = setTimeout(() => {
-          setExiting(true);
-
-          hideTimer = setTimeout(() => {
-            setVisible(false);
-          }, 850);
-        }, 450);
+          exitTimer = setTimeout(() => {
+            onComplete?.();
+          }, 750);
+        }, 200);
       }
     };
 
-    animationFrame = requestAnimationFrame(updateProgress);
+    animationFrame =
+      requestAnimationFrame(update);
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      clearTimeout(completeTimer);
       clearTimeout(exitTimer);
-      clearTimeout(hideTimer);
     };
-  }, []);
+  }, [onComplete]);
 
-  if (!visible) {
-    return null;
-  }
+  /*
+   * This is the important part.
+   *
+   * Original CodePen:
+   *
+   * background-position: top
+   *       ↓
+   * background-position: bottom
+   *
+   * We simply drive that same animation
+   * continuously with React.
+   */
+  const fillPosition = `${progress}%`;
 
-  const letters = ["D", "E", "V", "S"];
+  /*
+   * Typing animation timing.
+   *
+   * The tagline has 20 characters.
+   * It will type throughout the first ~2 seconds.
+   */
+  const taglineLength = "CODE-COFFEE-REPEAT".length;
+
+  const typedCharacters = Math.floor(
+    (progress / 100) *
+      taglineLength
+  );
+
+  const typedText =
+    "CODE-COFFEE-REPEAT".slice(
+      0,
+      typedCharacters
+    );
 
   return (
     <div
       className={`preloader ${
-        exiting ? "preloader-exiting" : ""
+        isExiting ? "preloader-exit" : ""
       }`}
     >
-
-      {/* ================================
+      {/* =====================================
           MATRIX BACKGROUND
-         ================================= */}
+      ====================================== */}
 
       <MatrixRain />
 
+      {/* =====================================
+          CENTER DARKENING
+      ====================================== */}
 
-      {/* ================================
-          DEVS
-         ================================= */}
+      <div className="matrix-vignette" />
 
-      <div className="devs-loader">
+      {/* =====================================
+          MAIN CONTENT
+      ====================================== */}
 
-        {letters.map((letter, index) => (
-          <div
-            className={`devs-letter letter-${index}`}
-            key={letter}
-          >
+      <main className="preloader-content">
 
-            {/* Hollow outline */}
+        {/* ===================================
+            DEVS LOGO
+        ==================================== */}
 
-            <span className="letter-outline">
-              {letter}
-            </span>
-
-
-            {/* Liquid fill */}
-
-            <span className="letter-fill">
-              {letter}
-            </span>
-
+        <div
+          className="devs-wrapper"
+          style={
+            {
+              "--fill-position":
+                `${fillPosition}`,
+            } as React.CSSProperties
+          }
+        >
+          {/* OUTLINE */}
+          <div className="devs-outline">
+            DEVS.
           </div>
-        ))}
 
-      </div>
-
-
-      {/* ================================
-          CODE-COFFEE-REPEAT
-         ================================= */}
-
-      <div className="preloader-tagline">
-
-        {"CODE-COFFEE-REPEAT".split("").map(
-          (character, index) => (
-            <span
-              key={index}
-              style={{
-                animationDelay: `${0.18 + index * 0.075}s`,
-              }}
-            >
-              {character === " "
-                ? "\u00A0"
-                : character}
-            </span>
-          )
-        )}
-
-      </div>
+          {/* WHITE FILL */}
+          <div className="devs-liquid">
+            DEVS.
+          </div>
+        </div>
 
 
-      {/* ================================
+        {/* ===================================
+            TAGLINE
+        ==================================== */}
+
+        <div className="tagline">
+          <span>{typedText}</span>
+
+          <span className="typing-cursor">
+            |
+          </span>
+        </div>
+
+      </main>
+
+
+      {/* =====================================
           PERCENTAGE
-         ================================= */}
+      ====================================== */}
 
-      <div className="preloader-percentage">
-        {progress}%
+      <div className="loading-percentage">
+        {Math.floor(progress)
+          .toString()
+          .padStart(3, "0")}
+        %
       </div>
 
     </div>

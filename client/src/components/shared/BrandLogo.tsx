@@ -24,7 +24,7 @@ export default function BrandLogo({ size = "sm", progress }: BrandLogoProps) {
           // Use the authoritative logo PNG directly for static header displays
           <img
             src={devsLogo}
-            alt="DEVS"
+            alt="DEVS."
             className="brand-logo-img"
             style={{ display: "block", width: "auto" }}
           />

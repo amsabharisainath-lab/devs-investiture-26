@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import PacmanTile from "../components/PacmanTile";
 
 import devsLogo from "../assets/devs-header.jpeg";
 import chiefGuestPhoto from "../assets/chief-guest.jpg";
@@ -28,7 +29,10 @@ export default function Event() {
           HEADER
          ================================================= */}
 
-      <section className="home-header">
+      <PacmanTile>
+
+
+        <section className="home-header">
 
         {/* Hamburger / Sidebar Button */}
         <button
@@ -60,11 +64,17 @@ export default function Event() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           GUEST INFORMATION
          ================================================= */}
 
-      <section className="event-card">
+      <PacmanTile>
+
+
+        <section className="event-card">
 
         {/* =================================================
             CHIEF GUEST
@@ -137,11 +147,17 @@ export default function Event() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           VENUE + TIMINGS
          ================================================= */}
 
-      <section className="venue-timing-card">
+      <PacmanTile>
+
+
+        <section className="venue-timing-card">
 
         {/* VENUE */}
         <div className="venue-timing-item">
@@ -173,11 +189,17 @@ export default function Event() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           SOCIAL LINKS
          ================================================= */}
 
-      <footer className="social-card">
+      <PacmanTile className="pacman-slow">
+
+
+        <footer className="social-card">
 
         {/* LinkedIn */}
         <a
@@ -247,6 +269,9 @@ export default function Event() {
         </a>
 
       </footer>
+
+
+      </PacmanTile>
 
     </main>
   );

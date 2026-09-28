@@ -5,17 +5,32 @@ export default function MyQR() {
 
   return (
     <main className="qr-page">
+      <section className="qr-container">
 
-      <section className="qr-card">
-
-        <h1>
+        {/* PAGE TITLE */}
+        <h1 className="qr-page-title">
           MY QR
         </h1>
 
-        <div className="qr-placeholder">
-          QR CODE
-        </div>
+        {/* ENTRY QR */}
+        <section className="qr-tile">
+          <h2>ENTRY QR</h2>
 
+          <div className="qr-display">
+            <span>QR CODE</span>
+          </div>
+        </section>
+
+        {/* EXIT QR */}
+        <section className="qr-tile">
+          <h2>EXIT QR</h2>
+
+          <div className="qr-display">
+            <span>QR CODE</span>
+          </div>
+        </section>
+
+        {/* BACK */}
         <button
           className="go-back-button"
           type="button"
@@ -25,7 +40,6 @@ export default function MyQR() {
         </button>
 
       </section>
-
     </main>
   );
 }

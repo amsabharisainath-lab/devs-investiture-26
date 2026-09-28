@@ -5,33 +5,50 @@ export default function Profile() {
 
   return (
     <main className="profile-page">
+      <section className="profile-container">
 
-      <section className="profile-card">
-
-        <h1>
+        {/* PAGE TITLE */}
+        <h1 className="profile-page-title">
           MY PROFILE
         </h1>
 
-        <div className="profile-details">
+        {/* NAME */}
+        <section className="profile-tile">
+          <h2>NAME</h2>
 
-          <p>
-            NAME
-          </p>
+          <div className="profile-value">
+            {/* Student name will appear here */}
+          </div>
+        </section>
 
-          <p>
-            DEPARTMENT
-          </p>
+        {/* DEPARTMENT */}
+        <section className="profile-tile">
+          <h2>DEPARTMENT</h2>
 
-          <p>
-            YEAR
-          </p>
+          <div className="profile-value">
+            {/* Department will appear here */}
+          </div>
+        </section>
 
-          <p>
-            REGISTER NUMBER
-          </p>
+        {/* YEAR */}
+        <section className="profile-tile">
+          <h2>YEAR</h2>
 
-        </div>
+          <div className="profile-value">
+            {/* Year will appear here */}
+          </div>
+        </section>
 
+        {/* REGISTER NUMBER */}
+        <section className="profile-tile">
+          <h2>REGISTER NUMBER</h2>
+
+          <div className="profile-value">
+            {/* Register number will appear here */}
+          </div>
+        </section>
+
+        {/* GO BACK */}
         <button
           className="go-back-button"
           type="button"
@@ -41,7 +58,6 @@ export default function Profile() {
         </button>
 
       </section>
-
     </main>
   );
 }

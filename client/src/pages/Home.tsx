@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import PacmanTile from "../components/PacmanTile";
 
 import devsLogo from "../assets/devs-header.jpeg";
 import chiefGuestPhoto from "../assets/chief-guest.jpg";
@@ -30,7 +31,10 @@ export default function Home() {
           HEADER
          ================================================= */}
 
-      <section className="home-header">
+      <PacmanTile>
+
+
+        <section className="home-header">
 
         {/* Hamburger / Sidebar Button */}
         <button
@@ -62,19 +66,30 @@ export default function Home() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           SIGN IN
          ================================================= */}
 
       <section className="signin-section">
 
-        <button
+
+        <PacmanTile className="pacman-signin pacman-fast">
+
+
+          <button
           className="signin-button"
           type="button"
           onClick={() => navigate("/register")}
         >
           SIGN IN
         </button>
+
+
+        </PacmanTile>
+
 
       </section>
 
@@ -83,7 +98,10 @@ export default function Home() {
           GUEST INFORMATION
          ================================================= */}
 
-      <section className="event-card">
+      <PacmanTile>
+
+
+        <section className="event-card">
 
         {/* =================================================
             CHIEF GUEST
@@ -156,11 +174,17 @@ export default function Home() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           VENUE + TIMINGS
          ================================================= */}
 
-      <section className="venue-timing-card">
+      <PacmanTile>
+
+
+        <section className="venue-timing-card">
 
         {/* VENUE */}
         <div className="venue-timing-item">
@@ -192,11 +216,17 @@ export default function Home() {
       </section>
 
 
+      </PacmanTile>
+
+
       {/* =================================================
           SOCIAL LINKS
          ================================================= */}
 
-      <footer className="social-card">
+      <PacmanTile className="pacman-slow">
+
+
+        <footer className="social-card">
 
         {/* LinkedIn */}
         <a
@@ -266,6 +296,9 @@ export default function Home() {
         </a>
 
       </footer>
+
+
+      </PacmanTile>
 
     </main>
   );

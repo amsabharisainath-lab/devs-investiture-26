@@ -35,34 +35,61 @@ const columns = [
 
 export default function MatrixRain() {
   return (
-    <div className="matrix-rain" aria-hidden="true">
-      {columns.map((characters, index) => (
-        <div
-          className="matrix-column"
-          key={index}
-          style={{
-            left: `${(index / columns.length) * 100}%`,
-            animationDelay: `${(index * 0.37) % 4}s`,
-            animationDuration: `${3.5 + ((index * 0.73) % 3)}s`,
-          }}
-        >
-          {characters.split("").map((character, charIndex) => (
-            <span
-              key={charIndex}
-              className={
-                charIndex === characters.length - 1
-                  ? "matrix-character matrix-head"
-                  : "matrix-character"
-              }
-              style={{
-                animationDelay: `${charIndex * 0.08}s`,
-              }}
-            >
-              {character}
-            </span>
-          ))}
-        </div>
-      ))}
+    <div
+      className="matrix-rain"
+      aria-hidden="true"
+    >
+      {columns.map(
+        (characters, index) => (
+          <div
+            className="matrix-column"
+            key={index}
+            style={{
+              left: `${
+                (index / columns.length) *
+                100
+              }%`,
+
+              /*
+               * Negative delays mean the rain
+               * is already running when the
+               * preloader appears.
+               */
+
+              animationDelay:
+                `-${(index * 0.19) % 2.2}s`,
+
+              /*
+               * Faster rain.
+               */
+
+              animationDuration:
+                `${2.2 + ((index * 0.17) % 1.6)}s`,
+            }}
+          >
+            {characters
+              .split("")
+              .map(
+                (
+                  character,
+                  charIndex
+                ) => (
+                  <span
+                    key={charIndex}
+                    className={
+                      charIndex ===
+                      characters.length - 1
+                        ? "matrix-character matrix-head"
+                        : "matrix-character"
+                    }
+                  >
+                    {character}
+                  </span>
+                )
+              )}
+          </div>
+        )
+      )}
     </div>
   );
 }
