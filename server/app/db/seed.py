@@ -28,20 +28,30 @@ def seed_test_data(db: Session | None = None) -> dict:
         now = datetime.now(timezone.utc)
 
         # 1. Ensure Active Event
+        # 1. Ensure Active Event
         event = db.query(Event).filter(Event.name == "DEVS Investiture 2026").first()
+
         if not event:
-            event = Event(
-                name="DEVS Investiture 2026",
-                status=EventStatus.ACTIVE,
-                entry_open_at=now - timedelta(hours=2),
-                entry_close_at=now + timedelta(hours=12),
-                exit_open_at=now + timedelta(hours=12),
-                exit_close_at=now + timedelta(days=2),
-            )
+            event = Event(name="DEVS Investiture 2026")
             db.add(event)
-            db.commit()
-            db.refresh(event)
-            logger.info("Seeded active event: %s (id: %s)", event.name, event.id)
+
+# Always reset event to an active testing window
+        event.status = EventStatus.ACTIVE
+        event.entry_open_at = now - timedelta(hours=2)
+        event.entry_close_at = now + timedelta(hours=12)
+        event.exit_open_at = now + timedelta(hours=12)
+        event.exit_close_at = now + timedelta(days=2)
+
+        db.commit()
+        db.refresh(event)
+
+        logger.info(
+            "Test event ready: %s (id: %s), entry closes: %s, exit opens: %s",
+            event.name,
+            event.id,
+            event.entry_close_at,
+            event.exit_open_at,
+        )
 
         # 2. Ensure Default Station
         station = db.query(Station).filter(Station.name == "Gate 1 - Main Entrance").first()
