@@ -42,7 +42,8 @@ class Settings(BaseSettings):
     DB_ECHO: bool = False
 
     # Redis / Celery Configuration
-    REDIS_URL: str = "redis://localhost:6379/0"
+    # REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_URL: str = "redis://default:gQAAAAAABNiDAAIgcDEzODJkMDVmZDJjY2Q0NTU4YTQ4NDViMDA0ODgwMGIxMg@harmless-seal-317571.upstash.io:6379"
 
     # JWT Configuration
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
