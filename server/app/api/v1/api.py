@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import attendance, auth, health, onspot_registration, registration, admin_dashboard, admin_registrations, user_management, station_management, admin_scan_history
+from app.api.v1.endpoints import attendance, auth, health, onspot_registration, registration, admin_dashboard, admin_registrations, user_management, station_management, admin_scan_history, event_management
 
 api_router = APIRouter()
 
@@ -18,3 +18,4 @@ api_router.include_router(admin_registrations.router)
 api_router.include_router(user_management.router)
 api_router.include_router(station_management.router)
 api_router.include_router(admin_scan_history.router)
+api_router.include_router(event_management.router)
