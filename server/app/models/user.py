@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
-from sqlalchemy import BigInteger, String, SmallInteger, Boolean, DateTime, Enum, func
+from sqlalchemy import BigInteger,Integer, String, SmallInteger, Boolean, DateTime, Enum, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
@@ -18,9 +18,11 @@ from app.enum.user_role import UserRole
 class User(Base):
     __tablename__ = "users"
 
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
+
     # Primary Key
     id: Mapped[int] = mapped_column(
-        BigInteger,
+        ID_TYPE,
         primary_key=True,
         autoincrement=True
     )

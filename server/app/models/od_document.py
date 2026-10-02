@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func
+from sqlalchemy import BigInteger,Integer, String, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -10,13 +10,14 @@ from app.enum.od_status import ODStatus
 
 class ODDocument(Base):
     __tablename__ = "od_documents"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Foreign Keys
     registration_id: Mapped[int] = mapped_column(
-        BigInteger, 
+        ID_TYPE, 
         ForeignKey("registrations.id", ondelete="RESTRICT"), 
         nullable=False, 
         index=True
