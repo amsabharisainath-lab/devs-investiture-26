@@ -412,6 +412,9 @@ The Docker Compose PostgreSQL container is configured from the root `.env.exampl
 
 ```bash
 uv sync                                        # install dependencies
+uv sync --extra test                           # install with test dependencies (pytest)
+uv run pytest                                  # run server pytest test suite
+uv run pytest --cov=app --cov-report=term      # run tests with coverage report
 uv run main.py                                 # run with auto-reload (DEBUG=True)
 uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4   # production-ish

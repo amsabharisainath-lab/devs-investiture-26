@@ -28,14 +28,13 @@ def seed_test_data(db: Session | None = None) -> dict:
         now = datetime.now(timezone.utc)
 
         # 1. Ensure Active Event
-        # 1. Ensure Active Event
         event = db.query(Event).filter(Event.name == "DEVS Investiture 2026").first()
 
         if not event:
             event = Event(name="DEVS Investiture 2026")
             db.add(event)
 
-# Always reset event to an active testing window
+        # Always reset event to an active testing window
         event.status = EventStatus.ACTIVE
         event.entry_open_at = now - timedelta(hours=2)
         event.entry_close_at = now + timedelta(hours=12)
@@ -57,9 +56,9 @@ def seed_test_data(db: Session | None = None) -> dict:
         station = db.query(Station).filter(Station.name == "Gate 1 - Main Entrance").first()
         if not station:
             station = Station(
-            name="Gate 1 - Main Entrance",
-            type=StationType.ENTRY,
-            active=True,
+                name="Gate 1 - Main Entrance",
+                type=StationType.ENTRY,
+                active=True,
             )
             db.add(station)
             db.commit()
@@ -131,6 +130,11 @@ def seed_test_data(db: Session | None = None) -> dict:
                 "super_admin": "superadmin@rajalakshmi.edu.in",
             },
         }
+    except Exception as e:
+        logger.warning("seed_test_data skipped or failed: %s", e)
+        if db:
+            db.rollback()
+        return {"status": "skipped", "reason": str(e)}
     finally:
         if should_close:
             db.close()

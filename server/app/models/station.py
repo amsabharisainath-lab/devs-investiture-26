@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional,TYPE_CHECKING
-from sqlalchemy import BigInteger, String, Boolean, ForeignKey, Enum, DateTime, func
+from sqlalchemy import BigInteger,Integer, String, Boolean, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.user import User
@@ -13,9 +13,10 @@ from app.enum.station_type import StationType
 
 class Station(Base):
     __tablename__ = "stations"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Station Details
     name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
@@ -26,7 +27,7 @@ class Station(Base):
 
     # Foreign Keys
     assigned_admin_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        ID_TYPE, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Timestamps

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional,TYPE_CHECKING
-from sqlalchemy import BigInteger, ForeignKey, Enum, DateTime, Text, func
+from sqlalchemy import BigInteger,Integer, ForeignKey, Enum, DateTime, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.registration import Registration
@@ -15,24 +15,25 @@ from app.enum.qr_action import QRAction
 
 class ScanEvent(Base):
     __tablename__ = "scan_events"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Foreign Keys - Context (Nullable for completely invalid/unknown QR codes)
     registration_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("registrations.id", ondelete="SET NULL"), nullable=True, index=True
+        ID_TYPE, ForeignKey("registrations.id", ondelete="SET NULL"), nullable=True, index=True
     )
     token_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("qr_tokens.id", ondelete="SET NULL"), nullable=True, index=True
+        ID_TYPE, ForeignKey("qr_tokens.id", ondelete="SET NULL"), nullable=True, index=True
     )
     
     # Foreign Keys - Operational (Not Null)
     actor_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("users.id", ondelete="RESTRICT"), nullable=True, index=True
+        ID_TYPE, ForeignKey("users.id", ondelete="RESTRICT"), nullable=True, index=True
     )
     station_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("stations.id", ondelete="RESTRICT"), nullable=True, index=True
+        ID_TYPE, ForeignKey("stations.id", ondelete="RESTRICT"), nullable=True, index=True
     )
     
     # Scan Details

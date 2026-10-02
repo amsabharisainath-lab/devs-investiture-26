@@ -18,6 +18,12 @@ from app.models.registration import Registration
 # shows the network/queue needs it.
 QR_ENTRY_TTL_MINUTES = 5
 
+def ensure_utc(dt: datetime) -> datetime:
+    """Treat naive database datetimes as UTC and normalize aware values to UTC."""
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
 
 def create_qr(registration_id: int, action_str: str, db_session: Session):
     try:
@@ -52,7 +58,8 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
         if attendance.entry_status != AttendanceStatus.PENDING:
             return {"error": "Entry already completed or not pending."}, 403
         rolling_expiry = now + timedelta(minutes=QR_ENTRY_TTL_MINUTES)
-        expires_at = min(rolling_expiry, event.entry_close_at)
+        entry_close_at = ensure_utc(event.entry_close_at)
+        expires_at = min(rolling_expiry, entry_close_at)
 
     elif action == QRAction.EXIT:
         if attendance.entry_status != AttendanceStatus.SCANNED:
@@ -60,7 +67,8 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
         if attendance.exit_status != AttendanceStatus.PENDING:
             return {"error": "Exit already completed or not pending."}, 403
         rolling_expiry = now + timedelta(minutes=QR_ENTRY_TTL_MINUTES)
-        expires_at = min(rolling_expiry, event.exit_close_at)
+        exit_close_at = ensure_utc(event.exit_close_at)
+        expires_at = min(rolling_expiry, exit_close_at)
 
     if expires_at <= now:
         return {"error": "QR generation window has already closed."}, 403
@@ -78,7 +86,7 @@ def create_qr(registration_id: int, action_str: str, db_session: Session):
             return {"error": "QR code has already been consumed and cannot be regenerated."}, 403
 
         # Defence layer when active token already present
-        if existing_token and existing_token.expires_at > now:
+        if existing_token and ensure_utc(existing_token.expires_at) > now:
             return {"error": "A valid QR token already exists and has not expired.",
                     "expires_at": existing_token.expires_at.isoformat()
                     }, 409
