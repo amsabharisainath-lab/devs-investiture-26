@@ -23,7 +23,7 @@ class ODDocument(Base):
     )
     
     # Document Metadata
-    file_path: Mapped[str] = mapped_column(String(512), nullable=False)
+    file_path: Mapped[str] = mapped_column(String(512), nullable=True)
     
     # Storing standard SHA-256 hex digest requires exactly 64 characters
     sha256: Mapped[str] = mapped_column(String(64), nullable=False)
