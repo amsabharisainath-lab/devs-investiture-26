@@ -1476,17 +1476,32 @@ a {
 
 
 /* =========================================================
-   PAC-MAN TILE BORDER
-   Pac-Man travels around each tile and temporarily eats
-   the white border behind him.
+   PAC-MAN GAME-STYLE DOTTED BORDER SYSTEM
+   - The SIGN IN Pac-Man is the speed reference.
+   - All other Pac-Men travel at the same physical pixels/second.
+   - Larger tiles therefore take longer to complete a lap.
+   - Dots are individual elements.
+   - Pac-Man keeps exactly 3 dots eaten at a time.
+   - On the 4th eaten dot, the oldest eaten dot reappears.
+   - Normal tiles have a denser dot field than the SIGN IN tile.
    ========================================================= */
+
+:root {
+  /* CHANGE ONLY THIS VALUE TO control the SIGN IN reference speed. */
+  --pacman-speed: 5s;
+
+  /* Filled by PacmanTile.tsx from the SIGN IN tile's perimeter. */
+  --pacman-reference-perimeter: 500px;
+}
 
 .pacman-tile {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  border: 2px solid #fff;
+
+  border: 2px solid transparent;
   border-radius: 5px;
+
   background: #000;
   overflow: visible;
   isolation: isolate;
@@ -1499,59 +1514,111 @@ a {
   box-sizing: border-box;
 }
 
+/* Individual Pac-Man dots. */
+.pacman-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+
+  width: 4px;
+  height: 4px;
+
+  margin-left: -2px;
+  margin-top: -2px;
+
+  border-radius: 50%;
+  background: #fff;
+
+  pointer-events: none;
+
+  offset-path: inset(2px round 5px);
+  offset-distance: var(--dot-position);
+  offset-rotate: 0deg;
+
+  transition:
+    opacity 0.06s linear,
+    transform 0.06s linear;
+}
+
+/*
+ * CSS Pac-Man and the black eater use the exact duration calculated
+ * by PacmanTile.tsx for this particular tile.
+ */
 .pacman-eater,
 .pacman {
   position: absolute;
+  left: 0;
+  top: 0;
   pointer-events: none;
-  offset-path: inset(2px round 4px);
+
+  offset-path: inset(2px round 5px);
   offset-distance: 0%;
   offset-rotate: auto;
-  animation: pacmanOrbit 4s linear infinite;
+
+  animation: pacmanOrbit var(--pacman-duration, var(--pacman-speed)) linear infinite;
 }
 
 .pacman-eater {
   z-index: 4;
-  width: 18px;
-  height: 18px;
+
+  width: 20px;
+  height: 20px;
+
+  margin-left: -10px;
+  margin-top: -10px;
+
   border-radius: 50%;
   background: #000;
 }
 
 .pacman {
   z-index: 5;
-  width: 18px;
-  height: 18px;
+
+  width: 20px;
+  height: 20px;
+
+  margin-left: -10px;
+  margin-top: -10px;
+
   background: #fff;
+
   clip-path: polygon(
     0 0,
     100% 0,
-    100% 34%,
+    100% 35%,
     48% 50%,
-    100% 66%,
+    100% 65%,
     100% 100%,
     0 100%
   );
+
   animation:
-    pacmanOrbit 4s linear infinite,
-    pacmanMouth 0.24s steps(2, end) infinite;
+    pacmanOrbit var(--pacman-duration, var(--pacman-speed)) linear infinite,
+    pacmanMouth 0.22s steps(2, end) infinite;
 }
 
 .pacman::before {
   content: "";
   position: absolute;
-  width: 2.5px;
-  height: 2.5px;
+
+  width: 3px;
+  height: 3px;
+
   border-radius: 50%;
   background: #000;
+
   top: 3px;
-  left: 10px;
+  left: 11px;
 }
 
 .pacman::after {
   content: "";
   position: absolute;
-  inset: -2px;
+
+  inset: -3px;
   border-radius: 50%;
+
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.45);
 }
 
@@ -1571,9 +1638,9 @@ a {
     clip-path: polygon(
       0 0,
       100% 0,
-      100% 34%,
+      100% 35%,
       48% 50%,
-      100% 66%,
+      100% 65%,
       100% 100%,
       0 100%
     );
@@ -1592,7 +1659,7 @@ a {
   }
 }
 
-/* The wrapped components already draw their own borders. */
+/* The Pac-Man wrapper owns the visible border. */
 .pacman-tile-content > .home-header,
 .pacman-tile-content > .event-card,
 .pacman-tile-content > .venue-timing-card,
@@ -1601,7 +1668,6 @@ a {
   border-radius: 0;
 }
 
-/* SIGN IN uses the Pac-Man wrapper as its border. */
 .pacman-signin {
   width: max-content;
   max-width: 100%;
@@ -1616,10 +1682,21 @@ a {
 }
 
 @media (max-width: 700px) {
+  .pacman-dot {
+    width: 3px;
+    height: 3px;
+
+    margin-left: -1.5px;
+    margin-top: -1.5px;
+  }
+
   .pacman,
   .pacman-eater {
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
+
+    margin-left: -8.5px;
+    margin-top: -8.5px;
   }
 
   .pacman-signin .signin-button {
@@ -1634,24 +1711,73 @@ a {
   }
 }
 
-
 /* =========================================================
-   FINAL PAC-MAN SPEED
-   Every Pac-Man uses exactly the same 4-second loop.
+   MATRIX BACKGROUND — HOME + EVENT
    ========================================================= */
 
-.pacman-eater {
-  animation-name: pacmanOrbit;
-  animation-duration: 4s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+.home-page {
+  position: relative;
+  isolation: isolate;
 }
 
-.pacman {
-  animation-name: pacmanOrbit, pacmanMouth;
-  animation-duration: 4s, 0.24s;
-  animation-timing-function: linear, steps(2, end);
-  animation-iteration-count: infinite, infinite;
+/*
+ * Matrix stays behind the entire page.
+ */
+.home-page > .matrix-rain {
+  position: fixed;
+  inset: 0;
+
+  z-index: -1;
+
+  opacity: 0.35;
+
+  pointer-events: none;
+}
+
+/*
+ * Normal page sections stay above Matrix.
+ *
+ * IMPORTANT:
+ * Sidebar is deliberately excluded here.
+ * Its own CSS must remain position: fixed.
+ */
+.home-page > *:not(.matrix-rain):not(.sidebar):not(.sidebar-overlay) {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* =========================================================
+   SIDEBAR — ALWAYS FLOAT ABOVE THE PAGE
+   ========================================================= */
+
+.home-page > .sidebar {
+  position: fixed !important;
+
+  top: 0;
+  left: 0;
+
+  z-index: 9999 !important;
+
+  /*
+   * Do NOT allow it to participate in the
+   * home-page flex layout.
+   */
+  margin: 0;
+}
+
+
+/*
+ * Overlay also floats independently.
+ */
+.home-page > .sidebar-overlay {
+  position: fixed !important;
+
+  inset: 0;
+
+  z-index: 9998 !important;
+
+  margin: 0;
 }
 /* =========================================================
    MY QR PAGE
@@ -1975,4 +2101,476 @@ a {
     min-height: 26px;
   }
 
+}
+/* =========================================================
+   OAUTH PAGE
+========================================================= */
+
+.oauth-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #000;
+  color: #fff;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   BACKGROUND GRID
+========================================================= */
+
+.oauth-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 45px 45px;
+
+  pointer-events: none;
+}
+
+
+/* subtle center glow */
+
+.oauth-page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 650px;
+  height: 650px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  filter: blur(100px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.oauth-card {
+  position: relative;
+
+  width: min(560px, calc(100% - 40px));
+
+  padding: 34px;
+
+  background: rgba(0, 0, 0, 0.88);
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 20px 70px rgba(0, 0, 0, 0.8);
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   CORNER ACCENTS
+========================================================= */
+
+.corner {
+  position: absolute;
+
+  width: 18px;
+  height: 18px;
+
+  border-color: #fff;
+  border-style: solid;
+}
+
+.corner-tl {
+  top: -1px;
+  left: -1px;
+
+  border-width: 2px 0 0 2px;
+}
+
+.corner-tr {
+  top: -1px;
+  right: -1px;
+
+  border-width: 2px 2px 0 0;
+}
+
+.corner-bl {
+  bottom: -1px;
+  left: -1px;
+
+  border-width: 0 0 2px 2px;
+}
+
+.corner-br {
+  bottom: -1px;
+  right: -1px;
+
+  border-width: 0 2px 2px 0;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.oauth-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.oauth-header {
+  padding: 38px 0 30px;
+}
+
+.oauth-brand {
+  display: inline-block;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 42px;
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+}
+
+.oauth-line {
+  width: 100%;
+
+  height: 1px;
+
+  margin: 20px 0;
+
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.oauth-header h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(30px, 6vw, 48px);
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  line-height: 1;
+}
+
+.oauth-header h1 span {
+  font-weight: 400;
+}
+
+.oauth-subtitle {
+  margin: 12px 0 0;
+
+  color: rgba(255, 255, 255, 0.48);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+}
+
+
+/* =========================================================
+   LOGIN BOX
+========================================================= */
+
+.oauth-login-box {
+  padding: 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.oauth-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 15px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.7);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.oauth-description {
+  margin: 0 0 22px;
+
+  max-width: 440px;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   GOOGLE BUTTON
+========================================================= */
+
+.oauth-google-button {
+  width: 100%;
+
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.65);
+
+  background: #fff;
+
+  color: #000;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  letter-spacing: 1.2px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.oauth-google-button:hover:not(:disabled) {
+  background: #000;
+
+  color: #fff;
+
+  border-color: #fff;
+
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.15);
+
+  transform: translateY(-2px);
+}
+
+.oauth-google-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.oauth-google-button:disabled {
+  cursor: wait;
+
+  opacity: 0.6;
+}
+
+
+/* Google G */
+
+.google-icon {
+  width: 30px;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  text-align: left;
+}
+
+
+/* Button text */
+
+.oauth-google-button > span:nth-child(2) {
+  flex: 1;
+
+  text-align: left;
+}
+
+
+/* Arrow */
+
+.oauth-arrow {
+  font-size: 20px;
+
+  transition: transform 0.2s ease;
+}
+
+.oauth-google-button:hover .oauth-arrow {
+  transform: translateX(5px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.oauth-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 24px;
+
+  color: rgba(255, 255, 255, 0.32);
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.footer-divider {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+
+/* =========================================================
+   PAGE LABEL
+========================================================= */
+
+.oauth-page-label {
+  position: absolute;
+
+  bottom: 20px;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  color: rgba(255, 255, 255, 0.22);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .oauth-card {
+    width: calc(100% - 28px);
+
+    padding: 22px;
+  }
+
+  .oauth-brand {
+    font-size: 34px;
+  }
+
+  .oauth-header {
+    padding: 30px 0 24px;
+  }
+
+  .oauth-header h1 {
+    font-size: 31px;
+  }
+
+  .oauth-login-box {
+    padding: 18px;
+  }
+
+  .oauth-footer {
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    text-align: center;
+  }
+
+  .oauth-page-label {
+    padding: 0 14px;
+  }
 }

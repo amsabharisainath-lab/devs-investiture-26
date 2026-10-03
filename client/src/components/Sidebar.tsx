@@ -17,7 +17,11 @@ export default function Sidebar({
     if (canAccessUserPages) {
       navigate("/profile");
     } else {
-      navigate("/register");
+      navigate("/oauth", {
+        state: {
+          redirectTo: "/profile",
+        },
+      });
     }
   };
 
@@ -27,15 +31,19 @@ export default function Sidebar({
     if (canAccessUserPages) {
       navigate("/my-qr");
     } else {
-      navigate("/register");
+      navigate("/oauth", {
+        state: {
+          redirectTo: "/my-qr",
+        },
+      });
     }
   };
 
   const handleLogout = () => {
     onClose();
 
-    // Clear any future login/session data here
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("devs_access_token");
 
     navigate("/");
   };
@@ -60,7 +68,6 @@ export default function Sidebar({
           My Profile
         </button>
 
-
         {/* QR */}
         <button
           type="button"
@@ -69,7 +76,6 @@ export default function Sidebar({
         >
           My QR
         </button>
-
 
         {/* Logout */}
         <button

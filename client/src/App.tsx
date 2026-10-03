@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import LoadingState from "./components/shared/LoadingState";
+import Preloader from "./components/Preloader";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import OAuth from "./pages/OAuth";
+import OAuthCallback from "./pages/OAuthCallback";
 import Event from "./pages/Event";
 import Profile from "./pages/Profile";
 import MyQR from "./pages/MyQR";
@@ -21,11 +23,15 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {isLoading && <LoadingState onComplete={() => setIsLoading(false)} />}
+      {isLoading && (
+  <Preloader onComplete={() => setIsLoading(false)} />
+)}
 
       <Routes>
         {/* Student Attendee Flow */}
         <Route path="/" element={<Home />} />
+        <Route path="/oauth" element={<OAuth />} />
+<Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/register" element={<Register />} />
         <Route path="/event" element={<Event />} />
         <Route path="/profile" element={<Profile />} />

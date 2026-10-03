@@ -7,6 +7,8 @@ import devsLogo from "../assets/devs-header.jpeg";
 import chiefGuestPhoto from "../assets/chief-guest.jpg";
 import specialGuestPhoto from "../assets/special-guest.jpg";
 
+import MatrixRain from "../components/MatrixRain";
+
 export default function Home() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,6 +16,7 @@ export default function Home() {
 
   return (
     <main className="home-page">
+      <MatrixRain />
 
       {/* =================================================
           SIDEBAR
@@ -82,7 +85,7 @@ export default function Home() {
           <button
           className="signin-button"
           type="button"
-          onClick={() => navigate("/register")}
+          onClick={() => navigate("/oauth")}
         >
           SIGN IN
         </button>

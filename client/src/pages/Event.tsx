@@ -6,13 +6,15 @@ import devsLogo from "../assets/devs-header.jpeg";
 import chiefGuestPhoto from "../assets/chief-guest.jpg";
 import specialGuestPhoto from "../assets/special-guest.jpg";
 
+import MatrixRain from "../components/MatrixRain";
+
 export default function Event() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <main className="home-page">
-
+      <MatrixRain />
       {/* =================================================
           SIDEBAR
          ================================================= */}

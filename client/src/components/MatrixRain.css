@@ -1,148 +1,136 @@
 /* =========================================================
-   MATRIX DIGITAL RAIN
-========================================================= */
+   DEVS — CONTINUOUS MATRIX DIGITAL RAIN
+   ========================================================= */
 
 .matrix-rain {
   position: fixed;
-
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
-
   pointer-events: none;
-
   z-index: 0;
-
-  opacity: 1;
+  background: transparent;
+  opacity: 0.72;
 }
 
-
 /* =========================================================
-   FALLING COLUMN
-========================================================= */
+   EACH RAIN STREAM
+   ========================================================= */
 
 .matrix-column {
   position: absolute;
-
-  /*
-   * Start slightly above viewport.
-   */
-
-  top: -25vh;
+  left: var(--matrix-left);
+  top: -35vh;
 
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
 
-  gap: 4px;
+  gap: 2px;
+  width: 13px;
 
   font-family:
     "Courier New",
+    "Consolas",
     monospace;
 
-  font-size:
-    clamp(
-      9px,
-      1vw,
-      13px
-    );
-
-  font-weight: 400;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.88
-    );
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 700;
+  line-height: 1;
 
   white-space: nowrap;
+  color: rgba(255, 255, 255, 0.48);
+
+  transform: scale(var(--matrix-scale));
 
   animation:
     matrix-fall
+    var(--matrix-duration)
     linear
+    var(--matrix-delay)
     infinite;
 
-  will-change:
-    transform;
+  will-change: transform;
 }
 
-
 /* =========================================================
-   INDIVIDUAL CHARACTER
-========================================================= */
+   CHARACTERS
+   ========================================================= */
 
 .matrix-character {
   display: block;
 
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.54
-    );
+  width: 13px;
+  height: 13px;
 
-  opacity: 0.8;
+  text-align: center;
+
+  color: rgba(255, 255, 255, 0.38);
+  opacity: 0.85;
+
+  flex-shrink: 0;
 }
 
-
 /* =========================================================
-   LEADING CHARACTER
-========================================================= */
+   LEADING / BRIGHT CHARACTER
+   ========================================================= */
 
 .matrix-head {
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.75
-    );
-
+  color: rgba(255, 255, 255, 0.95);
   opacity: 1;
-}
 
+  text-shadow:
+    0 0 5px rgba(255, 255, 255, 0.7),
+    0 0 10px rgba(255, 255, 255, 0.25);
+}
 
 /* =========================================================
-   FALLING ANIMATION
-========================================================= */
+   CONTINUOUS FALL
+   ========================================================= */
 
 @keyframes matrix-fall {
-
-  from {
+  0% {
     transform:
-      translateY(-30vh);
+      translate3d(0, -30vh, 0)
+      scale(var(--matrix-scale));
   }
 
-  to {
+  100% {
     transform:
-      translateY(130vh);
+      translate3d(0, 145vh, 0)
+      scale(var(--matrix-scale));
   }
-
 }
-
 
 /* =========================================================
    MOBILE
-========================================================= */
+   ========================================================= */
 
 @media (max-width: 600px) {
-
   .matrix-rain {
-    opacity: 0.8;
+    opacity: 0.58;
   }
 
   .matrix-column {
+    width: 10px;
+    gap: 1px;
     font-size: 8px;
-
-    gap: 3px;
   }
 
+  .matrix-character {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-column {
+    animation: none;
+    transform: translateY(20vh);
+  }
 }
