@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional,TYPE_CHECKING,List
-from sqlalchemy import BigInteger, String, ForeignKey, Enum, DateTime, func, CheckConstraint,UniqueConstraint
+from sqlalchemy import BigInteger,Integer, String, ForeignKey, Enum, DateTime, func, CheckConstraint,UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.registration import Registration
@@ -11,13 +11,14 @@ from app.enum.qr_action import QRAction
 
 class QRToken(Base):
     __tablename__ = "qr_tokens"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Foreign Keys
     registration_id: Mapped[int] = mapped_column(
-        BigInteger, 
+        ID_TYPE, 
         ForeignKey("registrations.id", ondelete="RESTRICT"), 
         nullable=False, 
         index=True

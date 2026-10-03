@@ -412,6 +412,9 @@ The Docker Compose PostgreSQL container is configured from the root `.env.exampl
 
 ```bash
 uv sync                                        # install dependencies
+uv sync --extra test                           # install with test dependencies (pytest)
+uv run pytest                                  # run server pytest test suite
+uv run pytest --cov=app --cov-report=term      # run tests with coverage report
 uv run main.py                                 # run with auto-reload (DEBUG=True)
 uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4   # production-ish
@@ -531,6 +534,30 @@ A backend feature is complete when:
 - [ ] PR contains clear implementation and testing information.
 
 ---
+
+## Background jobs
+
+Compose starts one Redis broker, the API, and one worker consuming both
+`registration_email` and `od_email` queues:
+
+```bash
+docker compose up -d
+docker compose logs -f worker
+```
+
+For a local worker:
+
+```bash
+uv run celery -A app.worker.celery_app:celery_app worker -Q registration_email,od_email --loglevel=INFO
+```
+
+Registration commits before calling `.delay(registration_id)`, so email
+delivery does not delay or fail a successful registration response. The task
+contains only the registration ID; the worker reloads the record from
+PostgreSQL. Successful results are ignored because no result backend is
+configured. Temporary failures retry up to three times with exponential
+backoff. After the final retry, Celery marks the task failed and logs the
+exception. The OD task is intentionally a logged placeholder.
 
 ## Reference Documentation
 

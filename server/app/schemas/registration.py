@@ -21,6 +21,7 @@ class RegistrationResponse(BaseModel):
     status: RegistrationStatus
     registered_at: datetime
     message: str = "Successfully registered for the event."
+    entry_qr: QRCodeResponse | None = None
 
 class ReissueQRResponse(BaseModel):
     entry_qr: QRCodeResponse

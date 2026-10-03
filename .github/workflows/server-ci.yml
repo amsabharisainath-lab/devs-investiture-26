@@ -1,0 +1,80 @@
+name: Server CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
+      - develop
+    paths:
+      - "server/**"
+      - ".github/workflows/server-ci.yml"
+  pull_request:
+    branches:
+      - main
+      - master
+      - dev
+      - develop
+    paths:
+      - "server/**"
+      - ".github/workflows/server-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Pytest (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+
+    defaults:
+      run:
+        working-directory: server
+
+    env:
+      ENVIRONMENT: test
+      DEBUG: "false"
+      RATE_LIMIT_ENABLED: "false"
+      REDIS_URL: "memory://"
+      DATABASE_URI: "sqlite:///:memory:"
+      SECRET_KEY: "ci-test-secret-key-at-least-32-characters-long"
+      ALLOWED_EMAIL_DOMAINS: '["rajalakshmi.edu.in"]'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv package manager
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies and pytest
+        run: |
+          uv sync --dev --extra test || (
+            python -m pip install --upgrade pip
+            pip install -e ".[test]"
+          )
+
+      - name: Run Pytest test suite with coverage
+        run: |
+          uv run pytest --cov=app --cov-report=term-missing --cov-report=xml:coverage.xml || \
+          pytest --cov=app --cov-report=term-missing --cov-report=xml:coverage.xml
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: server-coverage-py${{ matrix.python-version }}
+          path: server/coverage.xml
+          retention-days: 7

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List,TYPE_CHECKING
-from sqlalchemy import BigInteger, String, DateTime, Enum, func, CheckConstraint
+from sqlalchemy import BigInteger,Integer, String, DateTime, Enum, func, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.registration import Registration
@@ -10,9 +10,10 @@ from app.enum.event_status import EventStatus
 
 class Event(Base):
     __tablename__ = "events"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Event Details
     name: Mapped[str] = mapped_column(String(255), nullable=False)

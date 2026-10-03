@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional,TYPE_CHECKING
-from sqlalchemy import BigInteger, ForeignKey, Enum, DateTime, Text, func
+from sqlalchemy import BigInteger,Integer, ForeignKey, Enum, DateTime, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
@@ -13,13 +13,14 @@ from app.enum.attendance_status import AttendanceStatus,AttendanceDecision
 
 class Attendance(Base):
     __tablename__ = "attendance"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Foreign Keys
     registration_id: Mapped[int] = mapped_column(
-        BigInteger, 
+        ID_TYPE, 
         ForeignKey("registrations.id", ondelete="RESTRICT"), 
         unique=True,      # Enforces 1 registration = 1 attendance record
         nullable=False
@@ -39,10 +40,10 @@ class Attendance(Base):
     )
     
     verified_by: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        ID_TYPE, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     station_id: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("stations.id", ondelete="SET NULL"), nullable=True
+        ID_TYPE, ForeignKey("stations.id", ondelete="SET NULL"), nullable=True
     )
     
     # Timestamps for specific actions

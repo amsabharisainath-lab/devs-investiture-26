@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional,List,TYPE_CHECKING
-from sqlalchemy import BigInteger, ForeignKey, Enum, DateTime, func, UniqueConstraint
+from sqlalchemy import BigInteger,Integer, ForeignKey, Enum, DateTime, func, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from app.models.event import Event
@@ -17,16 +17,17 @@ from app.enum.registration_source import RegistrationSource
 
 class Registration(Base):
     __tablename__ = "registrations"
+    ID_TYPE = BigInteger().with_variant(Integer, "sqlite")
 
     # Primary Key
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(ID_TYPE, primary_key=True, autoincrement=True)
 
     # Foreign Keys
     event_id: Mapped[int] = mapped_column(
-        BigInteger, ForeignKey("events.id", ondelete="RESTRICT"), nullable=False, index=True
+        ID_TYPE, ForeignKey("events.id", ondelete="RESTRICT"), nullable=False, index=True
     )
     user_id: Mapped[int] = mapped_column(
-        BigInteger, ForeignKey("users.id", ondelete="RESTRICT"), nullable=False, index=True
+        ID_TYPE, ForeignKey("users.id", ondelete="RESTRICT"), nullable=False, index=True
     )
     
     # Registration Details
@@ -39,7 +40,7 @@ class Registration(Base):
     
     # Admin who performed on-spot registration (Nullable)
     registered_by: Mapped[Optional[int]] = mapped_column(
-        BigInteger, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        ID_TYPE, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Timestamps
